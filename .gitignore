@@ -1,0 +1,22 @@
+# Local/editor
+.vscode/
+.DS_Store
+Thumbs.db
+
+# AI / assistant / local notes
+CLAUDE.md
+
+# Temporary / backup files
+*.tmp
+*.bak
+*.orig
+style.css.tmp.*
+style.css.bak_corrupted
+
+# Local scratch / references
+~/
+triangulo_3d/
+
+# Unused local assets
+imgs/hero-reference.png
+imgs/Asani_Logo_3D.png
