@@ -3,12 +3,7 @@
 (function asaniAnim() {
   const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (isReduced) {
-    const introTl = window.gsap.timeline({
-      defaults: { overwrite: true },
-      onStart: () => {
-        document.documentElement.classList.remove('hero-booting');
-      },
-    });
+    document.documentElement.classList.remove('hero-booting');
     return;
   }
 
@@ -1076,23 +1071,6 @@
       });
     });
 
-    const stackBoard = document.getElementById('stackBoard');
-    if (stackBoard) {
-      window.gsap.from(stackBoard, {
-        y: 42,
-        opacity: 0,
-        rotateX: 10,
-        duration: 1,
-        ease: 'power3.out',
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: stackBoard,
-          start: 'top 84%',
-          toggleActions: 'play none none none',
-        },
-      });
-    }
-
     const processLine = document.querySelector('.process-line');
     if (processLine) {
       const svgLine = processLine.querySelector('line');
@@ -1784,22 +1762,26 @@
     }
 
     const scrollDistance = () => {
-      const viewportFactor = window.innerWidth <= 900 ? 0.72 : 0.92;
+      const w = window.innerWidth;
+      const viewportFactor = w <= 480 ? 0.58 : w <= 900 ? 0.68 : 0.88;
       return Math.round(Math.max(1, cards.length - 1) * window.innerHeight * viewportFactor);
     };
+
+    const scrubAmount = window.innerWidth <= 900 ? 0.6 : 0.9;
 
     window.ScrollTrigger.create({
       trigger: section,
       start: 'top top',
       end: () => `+=${scrollDistance()}`,
       pin: true,
-      scrub: 0.9,
+      pinSpacing: true,
+      scrub: scrubAmount,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      onUpdate: (self) => {
+      onRefresh: (self) => {
         renderFromScrollProgress(self.progress);
       },
-      onRefresh: (self) => {
+      onUpdate: (self) => {
         renderFromScrollProgress(self.progress);
       },
     });
@@ -1825,21 +1807,22 @@
     const ENTER = 0.20;
     const EXIT  = 0.20;
     const isMobile = () => window.innerWidth <= 768;
+    const scrollPerStat = () => Math.round(
+      window.innerHeight * (isMobile() ? 0.55 : 0.75)
+    );
 
     // Stage sempre 100svh â€” .stat-item usa position:absolute e colapsa se o pai nÃ£o tiver altura explÃ­cita
     const stage = section.querySelector('.stats-stage');
+    const getPinnedDistance = () => Math.round(N * scrollPerStat());
+
     function setStageHeight() {
       if (stage) {
         stage.style.height = '100svh';
       }
+      section.style.minHeight = `${Math.round(window.innerHeight + getPinnedDistance())}px`;
     }
     setStageHeight();
     window.addEventListener('resize', setStageHeight, { passive: true });
-
-    // Desktop: 75vh por stat Â· Mobile: 55vh por stat
-    const scrollPerStat = () => Math.round(
-      window.innerHeight * (isMobile() ? 0.55 : 0.75)
-    );
 
     // Estado inicial: tudo invisÃ­vel
     items.forEach((item) => {
@@ -1852,13 +1835,16 @@
 
     const tl = window.gsap.timeline({
       scrollTrigger: {
-        trigger: section,
+        trigger: stage,
         pin: true,
+        pinSpacing: false,
         start: 'top top',
-        end: () => `+=${N * scrollPerStat()}`,
+        end: () => `+=${getPinnedDistance()}`,
         scrub: 1,
         invalidateOnRefresh: true,
         anticipatePin: 1,
+        onToggle: (self) => section.classList.toggle('is-stats-active', self.isActive),
+        onRefreshInit: setStageHeight,
       },
     });
 
