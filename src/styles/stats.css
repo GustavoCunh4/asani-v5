@@ -1,0 +1,223 @@
+/* ==========================================================
+   STATS EDITORIAL SEQUENCE — #sobre (section-numbers)
+   One metric at a time, pinned scroll, cinematic typography
+   ========================================================== */
+
+/* Stage: viewport-height container, GSAP pins this */
+.stats-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  /* Mobile usa svh para descontar a barra do browser */
+  height: 100svh;
+  overflow: hidden;
+  background: var(--bg-alt);
+  z-index: 1;
+}
+
+/* Each metric: full-bleed, two-column grid */
+.stat-item {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  will-change: transform, opacity;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ---- Left column: dots + number + label ---- */
+.stat-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 clamp(48px, 8vw, 120px);
+}
+
+/* Progress dots — 4 circles, active one filled */
+.stat-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: clamp(20px, 3vh, 36px);
+}
+
+.stat-dot {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  background: transparent;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.stat-dot.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.28);
+}
+
+/* Dominant number */
+.stat-number {
+  font-family: var(--display);
+  font-size: clamp(5rem, 14vw, 16rem);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  color: var(--fg);
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+
+/* Unit/suffix tied directly to number, accent-coloured */
+.stat-unit,
+.stat-sup {
+  color: var(--accent);
+  font-size: 0.38em;
+  vertical-align: 0.22em;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+
+/* Thin accent rule between number and label */
+.stat-number + .stat-label {
+  margin-top: clamp(14px, 2.2vh, 26px);
+  padding-top: clamp(14px, 2.2vh, 26px);
+  border-top: 1px solid var(--border);
+}
+
+/* Descriptor label */
+.stat-label {
+  font-family: var(--sans);
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--fg-3);
+  letter-spacing: 0.008em;
+  max-width: 28ch;
+}
+
+/* ---- Right column: ghost editorial word ---- */
+/* Alinha pelo início da coluna → overflow clipa pela direita, nunca pela esquerda */
+.stat-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: clamp(24px, 3vw, 48px);
+  overflow: hidden;
+  height: 100%;
+}
+
+.stat-bg-word {
+  font-family: var(--display);
+  font-size: clamp(2.8rem, 5.5vw, 8rem);
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  color: var(--fg);
+  text-shadow: none;
+  -webkit-text-stroke: 0.2px color-mix(in srgb, var(--fg) 20%, transparent);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  transform: translateY(4%);
+}
+
+/* Override old chapter padding rule */
+.chapter.section-numbers {
+  padding: 0;
+}
+
+/* ---- Tablet ---- */
+@media (max-width: 1024px) {
+  .stat-left {
+    padding: 0 clamp(36px, 6vw, 72px);
+  }
+
+  .stat-number {
+    font-size: clamp(4rem, 13vw, 10rem);
+  }
+
+  .stat-right {
+    padding-left: clamp(16px, 2.5vw, 36px);
+  }
+
+  .stat-bg-word {
+    font-size: clamp(2.5rem, 5.5vw, 7rem);
+  }
+}
+
+/* ---- Mobile: coluna única ---- */
+@media (max-width: 768px) {
+  .stat-item {
+    grid-template-columns: 1fr;
+  }
+
+  /* Conteúdo centralizado verticalmente com padding interno —
+     sem depender da altura do stage para criar espaçamento */
+  .stat-left {
+    position: relative;
+    z-index: 2;
+    /* Padding vertical move conteúdo do centro — sem espaço morto */
+    padding: clamp(36px, 5vh, 56px) clamp(28px, 6vw, 44px);
+    justify-content: center;
+  }
+
+  /* Palavra no canto inferior direito como textura */
+  .stat-right {
+    position: absolute;
+    right: 0;
+    bottom: clamp(16px, 3vh, 36px);
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    padding: 0 clamp(16px, 4vw, 28px);
+    justify-content: flex-end;
+    align-items: flex-end;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .stat-bg-word {
+    font-size: clamp(2.4rem, 13vw, 5.5rem);
+    transform: none;
+  }
+
+  .stat-number {
+    font-size: clamp(3.8rem, 19vw, 7rem);
+  }
+
+  .stat-dots {
+    gap: 7px;
+    margin-bottom: 18px;
+  }
+
+  .stat-label {
+    font-size: clamp(0.88rem, 3.2vw, 1.02rem);
+    max-width: 26ch;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-left {
+    padding: clamp(44px, 7vh, 64px) 24px;
+  }
+
+  .stat-number {
+    font-size: clamp(3.2rem, 18vw, 6rem);
+  }
+
+  .stat-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .stat-right {
+    bottom: 20px;
+  }
+}
+
