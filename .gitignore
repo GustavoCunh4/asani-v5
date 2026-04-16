@@ -1,3 +1,9 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
 # Local/editor
 .vscode/
 .DS_Store

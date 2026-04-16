@@ -1,0 +1,14 @@
+/* ─── Asani v5 — stylesheet entry point ───────────────────────────────────────
+   Import order matters: vars → base → nav → hero → sections → portal → layout → stats → solutions-stack
+   Each file covers a single layer of concern. Never add rules here directly.
+──────────────────────────────────────────────────────────────────────────── */
+
+@import './vars.css';
+@import './base.css';
+@import './nav.css';
+@import './hero.css';
+@import './sections.css';
+@import './portal.css';
+@import './layout.css';
+@import './stats.css';
+@import './solutions-stack.css';

@@ -1,0 +1,260 @@
+/* Solutions stack layout */
+.section-solutions {
+  --solutions-desktop-stage-height: clamp(520px, 34vw, 610px);
+  --solutions-desktop-card-width: min(540px, 40vw);
+  --solutions-desktop-card-top: 45%;
+  padding: 0 !important;
+  min-height: 100svh !important;
+  overflow: clip !important;
+  isolation: isolate !important;
+  z-index: 1 !important;
+}
+
+.section-solutions .container {
+  position: relative !important;
+  z-index: 1 !important;
+  min-height: 100svh !important;
+  display: grid !important;
+  grid-template-rows: auto 1fr !important;
+  align-content: start !important;
+  padding-top: clamp(92px, 7vw, 120px) !important;
+  padding-bottom: 0 !important;
+}
+
+.section-solutions .sec-head {
+  position: relative !important;
+  z-index: 3 !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  max-width: min(760px, 62vw) !important;
+  margin: 0 0 clamp(26px, 4vh, 40px) !important;
+}
+
+.section-solutions .solutions-carousel {
+  position: relative !important;
+  inset: auto !important;
+  width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  align-items: start !important;
+  perspective: 1800px !important;
+  overflow: visible !important;
+}
+
+.section-solutions .solutions-stack-stage {
+  position: relative !important;
+  width: 100vw !important;
+  height: auto !important;
+  min-height: var(--solutions-desktop-stage-height) !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: visible !important;
+}
+
+/* Ambient shadow cast beneath the stack — reinforces physical depth */
+.section-solutions .solutions-stack-stage::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 50% !important;
+  bottom: clamp(24px, 4vh, 48px) !important;
+  transform: translateX(-50%) !important;
+  width: min(520px, 44vw) !important;
+  height: 40px !important;
+  background: radial-gradient(
+    ellipse 80% 100% at 50% 100%,
+    rgba(139, 0, 21, 0.22),
+    transparent 72%
+  ) !important;
+  filter: blur(18px) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.section-solutions .solutions-grid {
+  position: relative !important;
+  width: 100vw !important;
+  height: var(--solutions-desktop-stage-height) !important;
+  min-height: var(--solutions-desktop-stage-height) !important;
+  max-height: none !important;
+  overflow: visible !important;
+  transform-style: preserve-3d !important;
+}
+
+.section-solutions .sol-card:not(.is-stack-active) {
+  pointer-events: none;
+}
+
+.section-solutions .sol-card {
+  inset: auto !important;
+  position: absolute !important;
+  top: var(--solutions-desktop-card-top) !important;
+  left: 50% !important;
+  width: var(--solutions-desktop-card-width) !important;
+  min-height: 470px !important;
+  margin: 0 !important;
+  transform-origin: center center !important;
+  will-change: transform, opacity, filter;
+  /* GSAP drives transform/opacity/filter via inline styles.
+     CSS transition only covers box-shadow / border-color so the
+     active-card shadow enhancement animates in/out naturally. */
+  transition: box-shadow 0.32s ease, border-color 0.28s ease !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(214, 83, 102, 0.92) 0%,
+      rgba(151, 12, 33, 0.96) 42%,
+      rgba(107, 7, 24, 0.98) 100%
+    ) !important;
+  border: 1px solid rgba(161, 37, 58, 0.36) !important;
+  box-shadow:
+    0 26px 72px rgba(100, 8, 23, 0.22),
+    0 8px 18px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Active (front) card — stronger shadow confirms it's "above" the stack */
+.section-solutions .sol-card.is-stack-active {
+  box-shadow:
+    0 48px 120px rgba(100, 8, 23, 0.34),
+    0 18px 48px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(255, 195, 208, 0.12) !important;
+  border-color: rgba(200, 60, 80, 0.42) !important;
+}
+
+/* Suppress the left-edge accent line — too distracting on crimson cards */
+.section-solutions .sol-card::before {
+  display: none !important;
+}
+
+.section-solutions .sol-card::after {
+  opacity: 1 !important;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.14), transparent 40%),
+    radial-gradient(560px 220px at 50% 0%, rgba(255, 205, 213, 0.2), transparent 72%),
+    radial-gradient(640px 320px at 120% -10%, rgba(255, 255, 255, 0.1), transparent 66%) !important;
+}
+
+.section-solutions .sol-card .sol-num,
+.section-solutions .sol-card .sol-card-inner h3,
+.section-solutions .sol-card .sol-card-inner p,
+.section-solutions .sol-card .sol-tags span {
+  color: rgba(255, 243, 245, 0.96) !important;
+}
+
+.section-solutions .sol-card .sol-num {
+  opacity: 0.92 !important;
+  text-shadow: 0 0 28px rgba(255, 209, 218, 0.14) !important;
+}
+
+.section-solutions .sol-card .sol-icon {
+  color: #fff1f4 !important;
+  border-color: rgba(255, 223, 228, 0.22) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 214, 222, 0.08)) !important;
+  box-shadow: 0 10px 28px rgba(64, 6, 16, 0.22) !important;
+}
+
+.section-solutions .sol-card .sol-tags span {
+  border-color: rgba(255, 222, 228, 0.18) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.section-solutions .solutions-dots {
+  display: none !important;
+}
+
+.section-solutions .solutions-name-bg {
+  font-size: clamp(1.8rem, 6vw, 3.8rem) !important;
+  max-width: min(88vw, 20ch) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: clamp(-4px, 1vh, 14px) !important;
+  transform: translateX(-50%) !important;
+  text-align: center !important;
+  opacity: 0.05 !important;
+  line-height: 0.88 !important;
+  padding-left: 0 !important;
+}
+
+/* Hover only applies to the active (front) card — others have pointer-events: none */
+.section-solutions .sol-card.is-stack-active:hover .sol-card-inner h3,
+.section-solutions .sol-card.is-stack-active:hover .sol-card-inner p,
+.section-solutions .sol-card.is-stack-active:hover .sol-tags span {
+  color: #24181b !important;
+}
+
+.section-solutions .sol-card.is-stack-active:hover .sol-tags span {
+  border-color: rgba(82, 27, 36, 0.18) !important;
+  background: rgba(255, 255, 255, 0.48) !important;
+}
+
+@media (max-width: 1200px) {
+  .section-solutions {
+    --solutions-desktop-stage-height: clamp(500px, 44vw, 570px);
+    --solutions-desktop-card-width: min(500px, 44vw);
+    --solutions-desktop-card-top: 46%;
+  }
+
+  .section-solutions .sec-head {
+    max-width: min(680px, 68vw) !important;
+  }
+
+  .section-solutions .sol-card {
+    min-height: 448px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .section-solutions .container {
+    min-height: 100svh !important;
+    padding-top: 88px !important;
+  }
+
+  .section-solutions .sec-head {
+    max-width: min(620px, 100%) !important;
+    margin-bottom: 24px !important;
+  }
+
+  .section-solutions .solutions-stack-stage {
+    height: auto !important;
+    min-height: clamp(430px, 54svh, 560px) !important;
+  }
+
+  .section-solutions .sol-card {
+    top: 50% !important;
+    width: min(86vw, 430px) !important;
+    min-height: 410px !important;
+  }
+
+  .section-solutions .solutions-name-bg {
+    font-size: clamp(1.5rem, 6.5vw, 2.8rem) !important;
+    max-width: 88vw !important;
+    bottom: 28px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-solutions .sec-head {
+    max-width: 100% !important;
+    margin-bottom: 18px !important;
+  }
+
+  .section-solutions .solutions-stack-stage {
+    height: auto !important;
+    min-height: clamp(380px, 50svh, 500px) !important;
+  }
+
+  .section-solutions .sol-card {
+    top: 50% !important;
+    width: min(90vw, 336px) !important;
+    min-height: 360px !important;
+  }
+
+  .section-solutions .solutions-name-bg {
+    font-size: clamp(1.25rem, 6.0vw, 2.2rem) !important;
+    bottom: 22px !important;
+  }
+}
