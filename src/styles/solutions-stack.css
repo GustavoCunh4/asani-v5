@@ -104,7 +104,6 @@
   background:
     linear-gradient(
       180deg,
-      rgba(214, 83, 102, 0.92) 0%,
       rgba(151, 12, 33, 0.96) 42%,
       rgba(107, 7, 24, 0.98) 100%
     ) !important;
@@ -166,17 +165,18 @@
 
 .section-solutions .solutions-name-bg {
   font-size: clamp(1.8rem, 6vw, 3.8rem) !important;
-  max-width: min(88vw, 20ch) !important;
+  max-width: none !important;
   white-space: nowrap !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   left: 50% !important;
   right: auto !important;
-  bottom: clamp(-4px, 1vh, 14px) !important;
+  bottom: clamp(14px, 2.5vh, 32px) !important;
   transform: translateX(-50%) !important;
   text-align: center !important;
-  opacity: 0.05 !important;
   line-height: 0.88 !important;
   padding-left: 0 !important;
+  opacity: 1 !important;
+  color: var(--deep) !important;
 }
 
 /* Hover only applies to the active (front) card — others have pointer-events: none */

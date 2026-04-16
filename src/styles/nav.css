@@ -27,8 +27,9 @@
   transition:opacity 0.34s ease;
 }
 .drawer-backdrop.is-visible{opacity:1;}
-.nav-toggle{display:none;align-items:center;justify-content:center;padding:0;margin-left:auto;width:46px;height:46px;border-radius:1px;border:1px solid var(--signal-border);background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));box-shadow:0 10px 30px rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.05);transition:border-color 0.28s,background 0.28s,transform 0.28s,box-shadow 0.28s;position:relative;overflow:hidden;}
-.nav-toggle:hover{border-color:var(--signal-glow);background:linear-gradient(180deg,var(--signal-faint),rgba(255,255,255,0.02));transform:translateY(-1px);box-shadow:0 14px 34px rgba(0,0,0,0.24),0 0 0 4px var(--signal-faint);}
+.nav-toggle{display:none;align-items:center;justify-content:center;padding:0;margin-left:auto;width:42px;height:42px;border-radius:6px;border:1px solid var(--border);background:transparent;transition:border-color 0.24s,background 0.24s;position:relative;}
+.nav-toggle:hover{border-color:var(--red-border);background:var(--signal-faint);}
+.nav-toggle.open{border-color:var(--red-border);background:var(--signal-faint);}
 .nav-toggle-line{
   position:absolute;
   left:50%;
@@ -37,14 +38,39 @@
   background:var(--fg);
   border-radius:999px;
   transform-origin:center;
-  transition:transform 0.32s cubic-bezier(0.22,1,0.36,1),opacity 0.22s,width 0.28s,background 0.22s;
 }
-.nav-toggle-line--top{width:18px;transform:translate(-50%,-7px);}
-.nav-toggle-line--mid{width:12px;transform:translate(-20%,-0.5px);background:var(--text-2);}
-.nav-toggle-line--bot{width:18px;transform:translate(-50%,6px);}
-.nav-toggle.open .nav-toggle-line--top{width:16px;transform:translate(-50%,0) rotate(45deg);}
-.nav-toggle.open .nav-toggle-line--mid{opacity:0;transform:translate(-50%,0) scaleX(0.2);}
-.nav-toggle.open .nav-toggle-line--bot{width:16px;transform:translate(-50%,0) rotate(-45deg);}
+/* Closing stagger: bot primeiro → mid → top (delays no estado base) */
+.nav-toggle-line--top{
+  width:20px;
+  transform:translate(-50%,-6.5px);
+  transition:transform 0.44s cubic-bezier(0.22,1,0.36,1) 0.08s,background 0.24s 0.08s;
+}
+.nav-toggle-line--mid{
+  width:12px;
+  transform:translate(-50%,0);
+  transition:transform 0.32s cubic-bezier(0.22,1,0.36,1) 0.04s,opacity 0.22s 0.04s,background 0.24s;
+}
+.nav-toggle-line--bot{
+  width:20px;
+  transform:translate(-50%,6.5px);
+  transition:transform 0.44s cubic-bezier(0.22,1,0.36,1) 0s,background 0.24s;
+}
+/* Opening: simultâneo (sem delay), bot com leve atraso para "fechar" o X */
+.nav-toggle.open .nav-toggle-line--top{
+  transform:translate(-50%,0) rotate(45deg);
+  background:var(--red);
+  transition:transform 0.44s cubic-bezier(0.22,1,0.36,1) 0s,background 0.2s;
+}
+.nav-toggle.open .nav-toggle-line--mid{
+  opacity:0;
+  transform:translate(-50%,0) scaleX(0);
+  transition:transform 0.2s cubic-bezier(0.22,1,0.36,1) 0s,opacity 0.16s 0s,background 0.2s;
+}
+.nav-toggle.open .nav-toggle-line--bot{
+  transform:translate(-50%,0) rotate(-45deg);
+  background:var(--red);
+  transition:transform 0.44s cubic-bezier(0.22,1,0.36,1) 0.05s,background 0.2s 0.05s;
+}
 /* -- MOBILE DRAWER -- */
 .drawer{
   position:fixed;top:0;right:0;bottom:0;z-index:1000;

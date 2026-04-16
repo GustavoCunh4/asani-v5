@@ -75,7 +75,7 @@ export function initHeroIntro(
   const brandInDuration = isMobileBoot ? 0.52 : 1.02;
   const brandInitScale  = isMobileBoot ? 0.88 : 0.62;
   const brandInitBlur   = isMobileBoot ? '4px' : '10px';
-  const brandTargetOpacity = window.innerWidth <= 768 ? 0.22 : (isMobileBoot ? 0.18 : 1);
+  const brandTargetOpacity = 1;
 
   gsap.set(hero, { opacity: 1, visibility: 'visible', clearProps: 'pointerEvents' });
   gsap.set(brandCanvas, { opacity: 0, scale: brandInitScale, filter: `blur(${brandInitBlur})`, transformOrigin: 'center center', clearProps: 'y,yPercent' });

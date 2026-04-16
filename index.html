@@ -29,17 +29,7 @@
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Scripts com defer: download em paralelo durante parse do HTML, execução em ordem -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-  <script defer src="script.js"></script>
-  <script defer src="anim.js"></script>
+  <script type="module" src="/src/main.ts"></script>
 </head>
 <body>
 
@@ -79,7 +69,7 @@
     </svg>
   </button>
   <div class="drawer-brand">
-    <img src="imgs/Asani_Logo_Completa_IA.png" alt="Asani" class="drawer-brand-logo">
+    <img src="imgs/Asani_Logo_Completa_Preta.png" alt="Asani" class="drawer-brand-logo">
     <span class="sr-only" id="drawerTitle">Menu principal</span>
   </div>
   <nav class="drawer-nav" aria-label="Navegação mobile">
@@ -342,7 +332,7 @@
         </header>
         <div class="process-track">
           <svg class="process-line" viewBox="0 0 1000 2" preserveAspectRatio="none">
-            <line x1="0%" y1="50%" x2="100%" y2="50%" stroke="var(--accent)" stroke-width="2" stroke-opacity="0.4" stroke-dasharray="1000" stroke-dashoffset="1000"/>
+            <line x1="0%" y1="50%" x2="75%" y2="50%" stroke="var(--accent)" stroke-width="2" stroke-opacity="0.4" stroke-dasharray="1000" stroke-dashoffset="1000"/>
           </svg>
           <div class="proc-item">
             <div class="proc-dot"><span>01</span></div>
