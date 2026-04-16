@@ -1,9 +1,3 @@
-# Dependencies
-node_modules/
-
-# Build output
-dist/
-
 # Local/editor
 .vscode/
 .DS_Store
@@ -26,3 +20,5 @@ triangulo_3d/
 # Unused local assets
 imgs/hero-reference.png
 imgs/Asani_Logo_3D.png
+
+node_modules/
