@@ -12,6 +12,8 @@ CLAUDE.md
 *.orig
 style.css.tmp.*
 style.css.bak_corrupted
+package-lock-IPQ-*.json
+WhatsApp Video *.mp4
 
 # Local scratch / references
 ~/
@@ -23,3 +25,4 @@ imgs/Asani_Logo_3D.png
 
 node_modules/
 dist/
+docs/

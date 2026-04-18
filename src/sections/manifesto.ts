@@ -40,13 +40,18 @@ export function initManifestoTakeover(): void {
   const manifesto = document.getElementById('manifesto');
   if (!manifesto) return;
 
-  gsap.set(manifesto, {
-    y: () => Math.round(window.innerHeight * 0.5),
-    zIndex: 10,
-    scale: 0.985,
-    transformOrigin: '50% 0%',
-    willChange: 'transform',
-  });
+  const setInitialState = () => {
+    gsap.set(manifesto, {
+      y: Math.round(window.innerHeight * 0.5),
+      zIndex: 10,
+      scale: 0.985,
+      transformOrigin: '50% 0%',
+      willChange: 'transform',
+    });
+  };
+
+  setInitialState();
+  ScrollTrigger.addEventListener('refreshInit', setInitialState);
 
   gsap.timeline({
     scrollTrigger: {

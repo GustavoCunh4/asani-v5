@@ -2,8 +2,6 @@
  * Asani v5 — main entry point
  * Orchestrates all init modules in the correct dependency order.
  */
-import './styles/index.css';
-
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 

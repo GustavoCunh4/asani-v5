@@ -107,16 +107,17 @@ export function initHeroIntro(
   }, 0.02);
 
   if (heroBrand3D) {
-    introTl.to(heroBrand3D, {
-      dummy: 1,
+    const assemblyState = { progress: 0 };
+    introTl.to(assemblyState, {
+      progress: 1,
       duration: brandInDuration + 0.06,
       ease: 'expo.out',
       onUpdate() {
-        const progress = (this as gsap.core.Tween).progress();
+        const progress = assemblyState.progress;
         heroBrand3D!.setAssembly(progress);
         heroBrand3D!.setBrandScale(0.9 + progress * 0.1);
       },
-    } as any, 0.02);
+    }, 0.02);
   }
 
   const spacer = document.getElementById('hero-scroll-space');
@@ -164,7 +165,7 @@ export function initHeroIntro(
       trigger: spacer,
       start: 'top top',
       end: 'bottom top',
-      scrub: 1.2,
+      scrub: 0.7,
       invalidateOnRefresh: true,
       onLeave: () => {
         hero.style.visibility = 'hidden';
@@ -177,35 +178,36 @@ export function initHeroIntro(
     },
   });
 
-  tl.to({}, { duration: 0.6 }, 0);
+  tl.to({}, { duration: 0.18 }, 0);
 
   tl.to(brandCanvas, {
     opacity: 0.12,
     scale: 1,
     ease: 'power2.inOut',
     duration: 0.9,
-  }, 0.6);
+  }, 0.18);
 
   if (heroBrand3D) {
-    tl.to(heroBrand3D, {
-      dummy: 1,
+    const brandFadeState = { progress: 0 };
+    tl.to(brandFadeState, {
+      progress: 1,
       duration: 0.9,
       ease: 'power2.inOut',
       onUpdate() {
-        const progress = (this as gsap.core.Tween).progress();
+        const progress = brandFadeState.progress;
         heroBrand3D!.setWordmarkOpacity(1 - progress * 0.78);
         heroBrand3D!.setTriangleOpacity(1 - progress * 0.32);
         heroBrand3D!.setBrandScale(1 - progress * 0.08);
       },
-    } as any, 0.6);
+    }, 0.18);
   }
 
-  tl.to(heroBody, { opacity: 1, duration: 0.22, ease: 'none' }, 1.48);
-  tl.to(blocks, { y: '0%', stagger: 0.06, duration: 0.62, ease: 'power3.out' }, 1.48);
+  tl.to(heroBody, { opacity: 1, duration: 0.22, ease: 'none' }, 0.42);
+  tl.to(blocks, { y: '0%', stagger: 0.06, duration: 0.62, ease: 'power3.out' }, 0.42);
   if (subWrap) {
-    tl.to(subWrap, { opacity: 1, y: 0, duration: 0.42, ease: 'power2.out' }, 1.62);
+    tl.to(subWrap, { opacity: 1, y: 0, duration: 0.42, ease: 'power2.out' }, 0.56);
   }
 
   tl.to({}, { duration: 0.5 }, 2.15);
-  tl.to(hero, { opacity: 0, ease: 'power2.in', duration: 0.5 }, 2.65);
+  tl.to(hero, { opacity: 0, ease: 'power2.in', duration: 0.42 }, 2.88);
 }
