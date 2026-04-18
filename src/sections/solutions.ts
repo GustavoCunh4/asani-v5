@@ -12,6 +12,19 @@ export function initSolutionsOrbit(): void {
   const cards = Array.from(track.querySelectorAll<HTMLElement>('.sol-card'));
   if (!cards.length) return;
 
+  const mobileFlowQuery = window.matchMedia('(max-width: 767px), (pointer: coarse)');
+  if (mobileFlowQuery.matches) {
+    cards.forEach((card, index) => {
+      card.classList.toggle('is-stack-active', index === 0);
+      card.setAttribute('aria-hidden', 'false');
+      card.style.removeProperty('transform');
+      card.style.removeProperty('opacity');
+      card.style.removeProperty('filter');
+      card.style.removeProperty('z-index');
+    });
+    return;
+  }
+
   let activeIndex = 0;
   let activeProgress = 0;
 
