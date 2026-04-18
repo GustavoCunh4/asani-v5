@@ -15,7 +15,8 @@ export function initSmoothAnchors(getLenis: () => Lenis | null): void {
       if (lenis) {
         lenis.scrollTo(target, { offset: -80, duration: 1.35 });
       } else {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const top = target.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: 'smooth' });
       }
     });
   });

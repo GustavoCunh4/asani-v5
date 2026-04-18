@@ -33,6 +33,27 @@ export function initStatsSequence(): void {
     if (bgWord) gsap.set(bgWord, { xPercent: 5,  opacity: 0 });
   });
 
+  // Reveal the first stat as soon as the section scrolls into view —
+  // avoids a long blank period before the pin activates at 'top top'.
+  const firstItem  = items[0];
+  const firstLeft  = firstItem.querySelector<HTMLElement>('.stat-left');
+  const firstBg    = firstItem.querySelector<HTMLElement>('.stat-bg-word');
+
+  gsap.set(firstItem, { opacity: 1 });
+  if (firstLeft) gsap.set(firstLeft, { yPercent: 0, opacity: 1 });
+  if (firstBg) gsap.set(firstBg, { xPercent: 0, opacity: 1 });
+
+  ScrollTrigger.create({
+    trigger: section,
+    start: 'top 88%',
+    once: true,
+    onEnter: () => {
+      gsap.to(firstItem, { opacity: 1, duration: 0.15, ease: 'none' });
+      if (firstLeft) gsap.to(firstLeft, { yPercent: 0, opacity: 1, duration: 0.35, ease: 'power2.out' });
+      if (firstBg) gsap.to(firstBg, { xPercent: 0, opacity: 1, duration: 0.4, ease: 'power2.out' });
+    },
+  });
+
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: stage,
@@ -40,7 +61,7 @@ export function initStatsSequence(): void {
       pinSpacing: false,
       start: 'top top',
       end: () => `+=${getPinnedDistance()}`,
-      scrub: 1,
+      scrub: 0.8,
       invalidateOnRefresh: true,
       anticipatePin: 1,
       onToggle: (self) => section.classList.toggle('is-stats-active', self.isActive),
@@ -53,24 +74,28 @@ export function initStatsSequence(): void {
     const left   = item.querySelector<HTMLElement>('.stat-left');
     const bgWord = item.querySelector<HTMLElement>('.stat-bg-word');
 
-    tl.to(item, { opacity: 1, duration: 0.01 }, base);
+    // First item is already revealed by the early ScrollTrigger above;
+    // only add enter animations for subsequent items.
+    if (i > 0) {
+      tl.to(item, { opacity: 1, duration: 0.01 }, base);
 
-    if (left) {
-      tl.fromTo(
-        left,
-        { yPercent: 6, opacity: 0 },
-        { yPercent: 0, opacity: 1, ease: 'power3.out', duration: ENTER },
-        base
-      );
-    }
+      if (left) {
+        tl.fromTo(
+          left,
+          { yPercent: 6, opacity: 0 },
+          { yPercent: 0, opacity: 1, ease: 'power3.out', duration: ENTER },
+          base
+        );
+      }
 
-    if (bgWord) {
-      tl.fromTo(
-        bgWord,
-        { xPercent: 5, opacity: 0 },
-        { xPercent: 0, opacity: 1, ease: 'power2.out', duration: ENTER * 1.2 },
-        base + 0.04
-      );
+      if (bgWord) {
+        tl.fromTo(
+          bgWord,
+          { xPercent: 5, opacity: 0 },
+          { xPercent: 0, opacity: 1, ease: 'power2.out', duration: ENTER * 1.2 },
+          base + 0.04
+        );
+      }
     }
 
     if (i < N - 1) {

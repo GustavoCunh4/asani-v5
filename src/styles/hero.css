@@ -259,7 +259,7 @@
 @keyframes scrollThumb{0%{top:-50%;}100%{top:100%;}}
 
 @media (max-width: 768px) {
-  #heroGlobe { opacity: 0.30; transform:scale(0.60) translateY(-24%); transform-origin:center 28%; }
+  #heroGlobe { opacity: 0.30; transform:scale(0.58) translateY(-23%); transform-origin:center 34%; }
   #heroBrand3D { pointer-events:none; }
   .hero-brand-wordmark{display:none;}
   .hero-brand-fallback{top:43%;width:clamp(164px,42vw,238px);height:clamp(31px,7.2vw,44px);}

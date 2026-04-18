@@ -32,6 +32,7 @@ import { initSolutionsOrbit } from './sections/solutions';
 
 const root = document.documentElement;
 root.classList.add('hero-booting');
+const shouldUseMobilePerformanceMode = window.matchMedia('(max-width: 1024px), (pointer: coarse)').matches;
 
 if ('scrollRestoration' in history) {
   (history as History).scrollRestoration = 'manual';
@@ -55,12 +56,20 @@ if (isReduced) {
 } else {
   // ─── Full animation boot ─────────────────────────────────────────────────────
   gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({
+    limitCallbacks: true,
+    ignoreMobileResize: true,
+  });
 
-  initLenis();
+  if (!shouldUseMobilePerformanceMode) {
+    initLenis();
+  }
 
   // Hero — Three.js scenes must initialize before intro timeline reads their state
   const heroBrand3D = initHeroBrand3D();
-  initHeroGlobe();
+  if (!shouldUseMobilePerformanceMode) {
+    initHeroGlobe();
+  }
   initHeroAmbient();
 
   // Hero intro uses heroBrand3D handle and lenis for anchor scrolling

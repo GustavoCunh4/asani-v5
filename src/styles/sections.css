@@ -1518,33 +1518,57 @@
   }
   .hero-body {
     grid-template-columns: 1fr;
-    gap: 28px;
-    padding-top: 53svh;
-    padding-bottom: 32px;
+    grid-template-rows: auto auto auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-top: clamp(360px, 34svh, 470px);
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
     padding-inline: 24px;
-    min-height: 100dvh;
-    height: 100dvh;
+    min-height: 100svh;
+    height: 100svh;
     align-items: center;
-    align-content: start;
     text-align: center;
-    justify-items: center;
+    justify-content: flex-start;
   }
   .hero-h1 {
     grid-column: 1;
+    grid-row: auto;
     text-align: center;
     margin-inline: auto;
-    max-width: 12ch;
+    max-width: 11ch;
+    font-size: clamp(2.5rem, 6.7vw, 4.5rem);
+    line-height: 0.98;
   }
   .hero-h1 .h1-block {
     text-align: center;
   }
   .hero-sub-wrap {
     grid-column: 1;
+    grid-row: auto;
     padding-top: 0;
     padding-left: 0;
-    max-width: 500px;
+    max-width: 520px;
     align-items: center;
     justify-self: center;
+    gap: 18px;
+  }
+  .hero-brand-id {
+    display: block;
+    width: 100%;
+    align-self: center;
+    justify-self: center;
+    text-align: center;
+    font-size: clamp(0.78rem, 1.1vw, 1rem);
+    color: #111;
+    margin: 0 0 10px;
+  }
+  .hero-sub {
+    text-align: center;
+    max-width: 36ch;
+  }
+  .hero-actions {
+    justify-content: center;
   }
   .manifesto-cols {
     grid-template-columns: 1fr;
@@ -1652,12 +1676,13 @@
 @media (max-width: 768px) {
   :root {
     --section-v: 80px;
-    --hero-mobile-top: 43svh;
-    --hero-mobile-bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+    --hero-mobile-top: clamp(200px, 44svh, 420px);
+    --hero-mobile-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
   #hero {
     min-height: auto;
     height: 100svh;
+    padding-top: 0;
   }
   .hero-stars {
     opacity: 0.54;
@@ -1673,7 +1698,7 @@
     padding-inline: 20px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
     align-items: center;
     text-align: center;
     justify-content: flex-start;
@@ -1687,7 +1712,7 @@
   .hero-sub-wrap {
     padding-left: 0;
     max-width: min(100%, 380px);
-    gap: 16px;
+    gap: 14px;
     align-items: center;
   }
   .hero-sub {
@@ -1817,8 +1842,8 @@
 }
 @media (max-width: 480px) {
   :root {
-    --hero-mobile-top: 40svh;
-    --hero-mobile-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    --hero-mobile-top: clamp(210px, 44svh, 390px);
+    --hero-mobile-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
   .hero-stars {
     opacity: 0.42;
@@ -1827,8 +1852,8 @@
     opacity: 0.5;
   }
   #heroGlobe {
-    opacity: 0.3;
-    transform: scale(0.66) translateY(-1%);
+    opacity: 0.16;
+    transform: scale(0.44) translateY(-21%);
     transform-origin: center 36%;
   }
   .hero-actions {
@@ -1840,16 +1865,16 @@
     justify-content: center;
   }
   .hero-h1 {
-    font-size: clamp(1.58rem, 9.2vw, 2.15rem);
+    font-size: clamp(1.54rem, 8.8vw, 2.08rem);
     max-width: 10.5ch;
   }
   .hero-body {
     padding-bottom: var(--hero-mobile-bottom);
     padding-inline: 16px;
-    gap: 12px;
+    gap: 10px;
   }
   .hero-sub-wrap {
-    gap: 14px;
+    gap: 12px;
     max-width: min(100%, 340px);
   }
   .hero-sub {

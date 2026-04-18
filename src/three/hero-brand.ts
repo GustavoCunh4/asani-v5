@@ -397,7 +397,7 @@ export function initHeroBrand3D(): HeroBrand3D | null {
   }
 
   function canInteract(): boolean {
-    return window.innerWidth > 768;
+    return window.innerWidth > 1024;
   }
 
   function resize(): void {
@@ -411,28 +411,28 @@ export function initHeroBrand3D(): HeroBrand3D | null {
     const mobile = window.innerWidth <= 768;
     if (narrow) {
       camera.position.set(0, 0.0, 16.5);
-      brandState.layoutScale = 0.58;
+      brandState.layoutScale = 0.44;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.54);
-      trianglePivot.position.set(0, 1.6, 0);
+      trianglePivot.scale.setScalar(0.42);
+      trianglePivot.position.set(0, 2.9, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.8, 0);
     } else if (mobile) {
       camera.position.set(0, 0.0, 14.5);
-      brandState.layoutScale = 0.68;
+      brandState.layoutScale = 0.52;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.60);
-      trianglePivot.position.set(0, 1.8, 0);
+      trianglePivot.scale.setScalar(0.48);
+      trianglePivot.position.set(0, 2.5, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.9, 0);
     } else if (window.innerWidth <= 1024) {
-      camera.position.set(0, 0.0, 13.2);
-      brandState.layoutScale = 0.78;
+      camera.position.set(0, 0.0, 14.8);
+      brandState.layoutScale = 0.62;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.70);
-      trianglePivot.position.set(0, 1.6, 0);
+      trianglePivot.scale.setScalar(0.58);
+      trianglePivot.position.set(0, 2.72, 0);
       wordmarkGroup.scale.setScalar(1);
-      wordmarkGroup.position.set(0, -0.7, 0);
+      wordmarkGroup.position.set(0, -0.86, 0);
     } else {
       camera.position.set(0, 0, 16.5);
       brandState.layoutScale = 0.7;
@@ -444,6 +444,8 @@ export function initHeroBrand3D(): HeroBrand3D | null {
     }
     if (!canInteract()) {
       trianglePivot.rotation.x = -0.05;
+      trianglePivot.rotation.y = 0;
+      trianglePivot.rotation.z = 0;
     }
     hitPlane.position.copy(trianglePivot.position);
   }
