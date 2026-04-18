@@ -28,7 +28,6 @@ interface Vec2 { x: number; y: number }
 
 interface BadgeSpec {
   label: string;
-  color: string;   // circle fill color
   draw: (ctx: CanvasRenderingContext2D, r: number) => void;
 }
 
@@ -181,21 +180,21 @@ function iconML(ctx: CanvasRenderingContext2D, r: number): void {
 // ─── Badge catalogue ──────────────────────────────────────────────────────────
 
 const BADGE_SPECS: BadgeSpec[] = [
-  { label: 'DATA',   color: '#204e8c', draw: iconData        },
-  { label: 'API',    color: '#8c4020', draw: iconApi         },
-  { label: 'AI',     color: '#58208c', draw: iconAI          },
-  { label: 'CLOUD',  color: '#186878', draw: iconCloud       },
-  { label: 'SSL',    color: '#1a6442', draw: iconLock        },
-  { label: 'GPU',    color: '#785418', draw: iconChip        },
-  { label: 'INTEGR', color: '#782044', draw: iconIntegration },
-  { label: 'ML',     color: '#481878', draw: iconML          },
+  { label: 'Dados', draw: iconData        },
+  { label: 'API', draw: iconApi           },
+  { label: 'IA', draw: iconAI             },
+  { label: 'Nuvem', draw: iconCloud       },
+  { label: 'Conexões', draw: iconIntegration },
+  { label: 'Seguro', draw: iconLock       },
+  { label: 'Sistema', draw: iconChip      },
+  { label: 'Automação', draw: iconML      },
 ];
 
 // ─── Pre-baked sprite generation ──────────────────────────────────────────────
 // Sprites are rendered once at SPRITE_SIZE and drawn via drawImage() each frame.
 
-const SPRITE_SIZE = 160;      // px — source resolution of each sprite canvas
-const LABEL_PAD   = 26;       // extra height for text label
+const SPRITE_SIZE = 156;
+const LABEL_PAD   = 30;
 
 type SpriteCanvas = OffscreenCanvas | HTMLCanvasElement;
 
@@ -212,63 +211,64 @@ function bakeSprite(spec: BadgeSpec, size: number): SpriteCanvas {
   if (!c) return oc;
 
   const cx = size / 2;
-  const cy = size / 2;
-  const r  = size * 0.40;   // circle radius within the sprite
+  const cy = size * 0.42;
+  const r  = size * 0.28;
 
-  // Circle fill
-  c.fillStyle = spec.color;
-  c.globalAlpha = 0.90;
+  c.shadowColor = 'rgba(255,255,255,0.34)';
+  c.shadowBlur = size * 0.14;
+  c.fillStyle = 'rgba(255,255,255,0.08)';
+  c.globalAlpha = 1;
   c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.fill();
 
-  // White border
-  c.globalAlpha = 1;
-  c.strokeStyle = 'rgba(255,255,255,0.20)';
+  c.strokeStyle = 'rgba(255,255,255,0.46)';
   c.lineWidth = 2;
   c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
 
-  // Icon
   c.save();
   c.translate(cx, cy);
-  c.strokeStyle = 'rgba(255,255,255,0.90)';
-  c.fillStyle   = 'rgba(255,255,255,0.90)';
-  c.lineWidth   = size * 0.032;
+  c.shadowBlur = 0;
+  c.strokeStyle = 'rgba(255,255,255,0.86)';
+  c.fillStyle   = 'rgba(255,255,255,0.86)';
+  c.lineWidth   = size * 0.028;
   c.lineCap  = 'round';
   c.lineJoin = 'round';
-  spec.draw(c, r * 0.50);
+  spec.draw(c, r * 0.56);
   c.restore();
 
-  // Label text below the circle
-  c.fillStyle = 'rgba(255,255,255,0.62)';
-  c.font = `700 ${size * 0.115}px "JetBrains Mono", monospace`;
-  c.textAlign    = 'center';
-  c.textBaseline = 'top';
-  c.fillText(spec.label, cx, size + 4);
+  c.shadowColor = 'rgba(60,0,10,0.55)';
+  c.shadowBlur = 8;
+  c.fillStyle = 'rgba(255,255,255,0.88)';
+  c.font = `700 ${spec.label.length > 7 ? 12 : 13}px Arial, sans-serif`;
+  c.textAlign = 'center';
+  c.textBaseline = 'middle';
+  c.fillText(spec.label, cx, size + LABEL_PAD * 0.46);
 
   return oc;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const ATTR_FRAC  = 0.09;    // absorption radius as fraction of min(w,h)
-const INF_FRAC   = 0.40;    // influence radius — badges start curving here
-const CONN_DIST  = 120;     // px — max distance for connection lines
-const GRID_COLS  = 18;
-const GRID_ROWS  = 12;
-const GRID_SAMP  = 50;      // sample points per grid line for distortion
-const DIST_RAD   = 0.22;    // mouse distortion radius as fraction of min(w,h)
-const DIST_AMP   = 22;      // max px displacement of grid lines
+const ATTR_FRAC  = 0.11;    // absorption radius as fraction of min(w,h)
+const INF_FRAC   = 0.56;    // influence radius — badges start curving here
+const CONN_DIST  = 150;     // px — max distance for connection lines
+const GRID_COLS  = 22;
+const GRID_ROWS  = 14;
+const GRID_SAMP  = 50;
+const DIST_RAD   = 0.18;    // mouse distortion radius as fraction of min(w,h)
+const DIST_AMP   = 34;
 
 function badgeCount(cw: number): number {
-  if (cw <= 600)  return 10;
-  if (cw <= 1024) return 16;
-  return 24;
+  if (cw <= 600)  return 16;
+  if (cw <= 1024) return 26;
+  return 38;
 }
 
 // ─── Public init ──────────────────────────────────────────────────────────────
 
 export function initTechField(): void {
   const canvas = document.getElementById('techField') as HTMLCanvasElement | null;
-  if (!canvas) return;
+  const section = document.getElementById('tecnologia');
+  if (!canvas || !section) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
@@ -277,6 +277,7 @@ export function initTechField(): void {
 
   const mouse:       Vec2 = { x: 0.5, y: 0.5 };
   const mouseSmooth: Vec2 = { x: 0.5, y: 0.5 };
+  let mousePulse = 0;
 
   // Attractor is at the center of the section — aligned with the triangle canvas
   const attractor: Vec2 = { x: 0.5, y: 0.50 };
@@ -303,43 +304,51 @@ export function initTechField(): void {
 
   function makeBadge(fromEdge: boolean): BadgeParticle {
     const depth = rnd(0.30, 1);
-    const spd   = rnd(0.04, 0.14) * depth;
-    const ang   = Math.random() * Math.PI * 2;
+    const spd   = rnd(0.24, 0.52) * depth;
     const pos   = fromEdge ? edgeSpawn() : { x: rnd(0.1, 0.9) * w, y: rnd(0.1, 0.9) * h };
+    const tx = attractor.x * w - pos.x;
+    const ty = attractor.y * h - pos.y;
+    const len = Math.hypot(tx, ty) || 1;
+    const wobble = rnd(-0.16, 0.16);
+    const dirX = tx / len + (-ty / len) * wobble;
+    const dirY = ty / len + (tx / len) * wobble;
     return {
       x: pos.x, y: pos.y, vx: 0, vy: 0,
-      r: (rnd(22, 30) + depth * 16),   // sprite display radius
-      opacity:       fromEdge ? 0 : rnd(0, 0.9),
-      targetOpacity: rnd(0.52, 0.88),
+      r: rnd(22, 32) + depth * 14,
+      opacity:       fromEdge ? 0 : rnd(0.18, 0.95),
+      targetOpacity: rnd(0.72, 1),
       specIndex: (Math.random() * BADGE_SPECS.length) | 0,
       depth,
       phase:  fromEdge ? 0 : 1,
       phaseT: fromEdge ? 0 : Math.random(),
-      driftVx: Math.cos(ang) * spd,
-      driftVy: Math.sin(ang) * spd,
+      driftVx: dirX * spd,
+      driftVy: dirY * spd,
       rot: 0,
     };
   }
 
   function resetBadge(b: BadgeParticle): void {
     const depth = rnd(0.30, 1);
-    const spd   = rnd(0.04, 0.14) * depth;
-    const ang   = Math.random() * Math.PI * 2;
+    const spd   = rnd(0.24, 0.52) * depth;
     const pos   = edgeSpawn();
+    const tx = attractor.x * w - pos.x;
+    const ty = attractor.y * h - pos.y;
+    const len = Math.hypot(tx, ty) || 1;
+    const wobble = rnd(-0.16, 0.16);
     b.x = pos.x; b.y = pos.y; b.vx = 0; b.vy = 0;
-    b.r            = rnd(22, 30) + depth * 16;
+    b.r            = rnd(22, 32) + depth * 14;
     b.opacity      = 0;
-    b.targetOpacity = rnd(0.52, 0.88);
+    b.targetOpacity = rnd(0.72, 1);
     b.specIndex    = (Math.random() * BADGE_SPECS.length) | 0;
     b.depth        = depth;
     b.phase        = 0; b.phaseT = 0;
-    b.driftVx      = Math.cos(ang) * spd;
-    b.driftVy      = Math.sin(ang) * spd;
+    b.driftVx      = (tx / len + (-ty / len) * wobble) * spd;
+    b.driftVy      = (ty / len + (tx / len) * wobble) * spd;
   }
 
   function populate(): void {
     const count = badgeCount(w);
-    for (let i = 0; i < count; i++) badges.push(makeBadge(false));
+    for (let i = 0; i < count; i++) badges.push(makeBadge(true));
   }
 
   // ─── Update ────────────────────────────────────────────────────────────────
@@ -358,20 +367,20 @@ export function initTechField(): void {
       switch (b.phase) {
         case 0: {
           // Spawning — fade in while drifting gently
-          b.phaseT = Math.min(1, b.phaseT + dt * 0.9);
-          b.opacity = b.phaseT * b.targetOpacity * 0.5;
-          b.x += b.driftVx * dt * 44;
-          b.y += b.driftVy * dt * 44;
-          if (b.phaseT >= 1) { b.phase = 1; b.phaseT = 0; }
+          b.phaseT = Math.min(1, b.phaseT + dt * 3.5);
+          b.opacity = b.phaseT * b.targetOpacity * 0.72;
+          b.x += b.driftVx * dt * 190;
+          b.y += b.driftVy * dt * 190;
+          if (b.phaseT >= 1) { b.phase = 2; b.phaseT = 0; }
           break;
         }
         case 1: {
           // Drifting — natural ambient float
-          b.opacity += (b.targetOpacity - b.opacity) * Math.min(1, dt * 2);
-          b.vx += (b.driftVx - b.vx) * Math.min(1, dt * 2.5);
-          b.vy += (b.driftVy - b.vy) * Math.min(1, dt * 2.5);
-          b.x += b.vx * dt * 60;
-          b.y += b.vy * dt * 60;
+          b.opacity += (b.targetOpacity - b.opacity) * Math.min(1, dt * 5);
+          b.vx += (b.driftVx - b.vx) * Math.min(1, dt * 8);
+          b.vy += (b.driftVy - b.vy) * Math.min(1, dt * 8);
+          b.x += b.vx * dt * 180;
+          b.y += b.vy * dt * 180;
           if (dist < infR) { b.phase = 2; b.phaseT = 0; }
           // Out of bounds → reset
           if (b.x < -80 || b.x > w + 80 || b.y < -80 || b.y > h + 80) resetBadge(b);
@@ -380,24 +389,26 @@ export function initTechField(): void {
         case 2: {
           // Attracted — curves toward the triangle core
           const t    = Math.max(0, 1 - dist / infR);
-          const pull = 0.0018 * t * b.depth;
+          const pull = 0.018 * (0.42 + t * t) * b.depth;
           b.vx += (dx / dist) * pull * 60 * dt;
           b.vy += (dy / dist) * pull * 60 * dt;
-          b.vx *= 0.968;
-          b.vy *= 0.968;
-          b.x += b.vx * dt * 60;
-          b.y += b.vy * dt * 60;
-          b.opacity = b.targetOpacity * (0.60 + t * 0.56);
+          b.vx *= 0.982;
+          b.vy *= 0.982;
+          b.x += b.vx * dt * 260;
+          b.y += b.vy * dt * 260;
+          const fadeStart = infR * 0.62;
+          const fadeNear = Math.max(0, Math.min(1, dist / fadeStart));
+          b.opacity = b.targetOpacity * Math.max(0, fadeNear * fadeNear);
           if (dist < absR) { b.phase = 3; b.phaseT = 0; }
           break;
         }
         case 3: {
           // Dissolving — absorbed into the triangle, shrinks + fades
-          b.phaseT = Math.min(1, b.phaseT + dt * 1.8);
-          const fade = 1 - b.phaseT * b.phaseT;
-          b.opacity = b.targetOpacity * Math.max(0, fade);
-          b.x += (dx / dist) * dt * 52;
-          b.y += (dy / dist) * dt * 52;
+          b.phaseT = Math.min(1, b.phaseT + dt * 6.2);
+          const fade = 1 - b.phaseT;
+          b.opacity = b.targetOpacity * Math.max(0, fade * fade) * 0.35;
+          b.x += (dx / dist) * dt * 360;
+          b.y += (dy / dist) * dt * 360;
           if (b.phaseT >= 0.3 && pulses.length < 6) {
             // Emit absorption pulse once (guard phaseT so it fires only once)
             if (b.phaseT < 0.35) {
@@ -428,7 +439,23 @@ export function initTechField(): void {
   // ─── Draw: background ──────────────────────────────────────────────────────
 
   function drawBackground(): void {
-    ctx.fillStyle = '#080508';
+    ctx.fillStyle = '#5a0712';
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = attractor.x * w;
+    const cy = attractor.y * h;
+    const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w, h) * 0.58);
+    core.addColorStop(0, 'rgba(255,255,255,0.12)');
+    core.addColorStop(0.22, 'rgba(255,56,88,0.42)');
+    core.addColorStop(0.58, 'rgba(128,10,26,0.54)');
+    core.addColorStop(1, 'rgba(90,7,18,0)');
+    ctx.fillStyle = core;
+    ctx.fillRect(0, 0, w, h);
+
+    const vignette = ctx.createRadialGradient(cx, cy, Math.min(w, h) * 0.24, cx, cy, Math.max(w, h) * 0.78);
+    vignette.addColorStop(0, 'rgba(0,0,0,0)');
+    vignette.addColorStop(1, 'rgba(70,0,12,0.34)');
+    ctx.fillStyle = vignette;
     ctx.fillRect(0, 0, w, h);
   }
 
@@ -438,14 +465,16 @@ export function initTechField(): void {
   // falls off smoothly via a squared distance function.
 
   function drawGrid(): void {
-    const mx     = mouseSmooth.x * w;
-    const my     = mouseSmooth.y * h;
+    if (mousePulse < 0.02) return;
+
+    const mx     = mouse.x * w;
+    const my     = mouse.y * h;
     const distR  = Math.min(w, h) * DIST_RAD;
     const distR2 = distR * distR;
 
     ctx.save();
-    ctx.strokeStyle = 'rgba(140,30,50,0.10)';
-    ctx.lineWidth   = 0.6;
+    ctx.strokeStyle = `rgba(255,255,255,${0.13 * mousePulse})`;
+    ctx.lineWidth   = 0.65;
     ctx.lineCap = 'round';
 
     // Horizontal lines
@@ -459,7 +488,7 @@ export function initTechField(): void {
         const d2 = dx * dx + dy * dy;
         // Smooth bell-curve repulsion: 0 at center, 0 at distR, peak at ~0.5×distR
         const t     = Math.max(0, 1 - d2 / distR2);
-        const yDisp = (dy / (Math.sqrt(d2) || 1)) * t * (1 - t) * 4 * DIST_AMP;
+        const yDisp = (dy / (Math.sqrt(d2) || 1)) * t * (1 - t) * 4 * DIST_AMP * mousePulse;
         const py    = y0 + yDisp;
         s === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
       }
@@ -476,13 +505,46 @@ export function initTechField(): void {
         const dy = py - my;
         const d2 = dx * dx + dy * dy;
         const t     = Math.max(0, 1 - d2 / distR2);
-        const xDisp = (dx / (Math.sqrt(d2) || 1)) * t * (1 - t) * 4 * DIST_AMP;
+        const xDisp = (dx / (Math.sqrt(d2) || 1)) * t * (1 - t) * 4 * DIST_AMP * mousePulse;
         const px    = x0 + xDisp;
         s === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
       }
       ctx.stroke();
     }
 
+    ctx.restore();
+  }
+
+  function drawMouseDistortion(): void {
+    if (mousePulse < 0.02) return;
+
+    const mx = mouse.x * w;
+    const my = mouse.y * h;
+    const radius = Math.min(w, h) * DIST_RAD;
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    const glow = ctx.createRadialGradient(mx, my, 0, mx, my, radius);
+    glow.addColorStop(0, `rgba(255,220,224,${0.24 * mousePulse})`);
+    glow.addColorStop(0.34, `rgba(255,72,96,${0.14 * mousePulse})`);
+    glow.addColorStop(1, 'rgba(255,72,96,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(mx - radius, my - radius, radius * 2, radius * 2);
+
+    ctx.globalCompositeOperation = 'multiply';
+    const shadow = ctx.createRadialGradient(mx - radius * 0.18, my - radius * 0.18, 0, mx, my, radius * 1.08);
+    shadow.addColorStop(0, 'rgba(255,255,255,0)');
+    shadow.addColorStop(0.54, `rgba(90,0,14,${0.12 * mousePulse})`);
+    shadow.addColorStop(1, 'rgba(90,0,14,0)');
+    ctx.fillStyle = shadow;
+    ctx.fillRect(mx - radius * 1.1, my - radius * 1.1, radius * 2.2, radius * 2.2);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = `rgba(255,235,238,${0.18 * mousePulse})`;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(mx, my, radius * (0.28 + 0.38 * (1 - mousePulse)), 0, Math.PI * 2);
+    ctx.stroke();
     ctx.restore();
   }
 
@@ -501,7 +563,7 @@ export function initTechField(): void {
           const t  = 1 - d / CONN_DIST;
           const al = t * Math.min(a.opacity, b.opacity) * 0.28;
           if (al < 0.006) continue;
-          ctx.strokeStyle = `rgba(180,48,68,${al})`;
+          ctx.strokeStyle = `rgba(255,255,255,${al * 0.72})`;
           ctx.lineWidth   = t * 0.65;
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
         }
@@ -521,6 +583,21 @@ export function initTechField(): void {
       const scale = b.phase === 3 ? Math.max(0.05, 1 - b.phaseT * 0.85) : 1;
       const drawR = b.r * scale;
       const spriteH = SPRITE_SIZE + LABEL_PAD;
+      const speed = Math.hypot(b.vx, b.vy);
+      if (speed > 0.001 && b.phase !== 3) {
+        const trail = Math.min(130, 48 + speed * 260);
+        const nx = b.vx / speed;
+        const ny = b.vy / speed;
+        const gradient = ctx.createLinearGradient(b.x - nx * trail, b.y - ny * trail, b.x, b.y);
+        gradient.addColorStop(0, 'rgba(255,255,255,0)');
+        gradient.addColorStop(1, `rgba(255,255,255,${Math.min(0.42, b.opacity * 0.34)})`);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = Math.max(1, drawR * 0.08);
+        ctx.beginPath();
+        ctx.moveTo(b.x - nx * trail, b.y - ny * trail);
+        ctx.lineTo(b.x - nx * drawR * 0.5, b.y - ny * drawR * 0.5);
+        ctx.stroke();
+      }
 
       ctx.globalAlpha = Math.min(1, b.opacity);
       ctx.drawImage(
@@ -528,7 +605,7 @@ export function initTechField(): void {
         b.x - drawR,                           // dest x
         b.y - drawR,                           // dest y
         drawR * 2,                             // dest w (circle portion)
-        drawR * 2 * (spriteH / SPRITE_SIZE),   // dest h (includes label)
+        drawR * 2 * (spriteH / SPRITE_SIZE),
       );
     }
     ctx.globalAlpha = 1;
@@ -540,7 +617,7 @@ export function initTechField(): void {
   function drawPulses(): void {
     ctx.save();
     for (const p of pulses) {
-      ctx.strokeStyle = `rgba(220,50,70,${p.opacity})`;
+      ctx.strokeStyle = `rgba(255,255,255,${p.opacity * 0.82})`;
       ctx.lineWidth   = 1.2;
       ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.stroke();
     }
@@ -554,14 +631,15 @@ export function initTechField(): void {
     const dt = Math.min((ts - lastT) / 1000, 0.05);
     lastT = ts;
 
-    mouseSmooth.x += (mouse.x - mouseSmooth.x) * 0.044;
-    mouseSmooth.y += (mouse.y - mouseSmooth.y) * 0.044;
+    mouseSmooth.x = mouse.x;
+    mouseSmooth.y = mouse.y;
+    mousePulse += (0 - mousePulse) * Math.min(1, dt * 8.5);
 
     update(dt);
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawBackground();
-    drawGrid();
+    drawMouseDistortion();
     drawConnections();
     drawBadges();
     drawPulses();
@@ -587,9 +665,10 @@ export function initTechField(): void {
   // ─── Events ────────────────────────────────────────────────────────────────
 
   function onMouseMove(e: MouseEvent): void {
-    const rect = canvas!.getBoundingClientRect();
+    const rect = section!.getBoundingClientRect();
     mouse.x = (e.clientX - rect.left) / rect.width;
     mouse.y = (e.clientY - rect.top)  / rect.height;
+    mousePulse = 1;
   }
 
   // ─── Init ──────────────────────────────────────────────────────────────────
@@ -598,7 +677,7 @@ export function initTechField(): void {
   populate();
 
   if (!isTouch) {
-    canvas.addEventListener('mousemove', onMouseMove, { passive: true });
+    section.addEventListener('mousemove', onMouseMove, { passive: true });
   }
   window.addEventListener('resize', onResize, { passive: true });
 

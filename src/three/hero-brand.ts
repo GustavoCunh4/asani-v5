@@ -88,7 +88,7 @@ export function initHeroBrand3D(): HeroBrand3D | null {
       bevelThickness: 0.022,
     });
     geometry.translate(0, 0, -depth / 2);
-    geometry = geometry.toNonIndexed();
+    if (geometry.index) geometry = geometry.toNonIndexed();
     geometry.computeVertexNormals();
 
     const mesh = new THREE.Mesh(geometry, material);
@@ -223,7 +223,7 @@ export function initHeroBrand3D(): HeroBrand3D | null {
       const bounds = geometry.boundingBox!;
       const width = bounds.max.x - bounds.min.x;
       geometry.translate(-(bounds.min.x + width / 2), 0, -depth / 2);
-      geometry = geometry.toNonIndexed();
+      if (geometry.index) geometry = geometry.toNonIndexed();
       geometry.computeVertexNormals();
 
       const basePosition = new THREE.Vector3(offsetX + width / 2, 0, 0);
