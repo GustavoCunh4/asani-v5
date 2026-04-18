@@ -306,14 +306,14 @@
   }
 
   .section-solutions .solutions-name-bg {
-    position: absolute !important;
+    position: sticky !important;
     left: 50% !important;
     right: auto !important;
     top: calc(100svh - 84px) !important;
     bottom: auto !important;
     display: block !important;
     transform: translateX(-50%) !important;
-    margin: 0 !important;
+    margin: 18px 0 0 !important;
     max-width: min(88vw, 430px) !important;
     white-space: normal !important;
     font-size: clamp(1.35rem, 7vw, 2rem) !important;

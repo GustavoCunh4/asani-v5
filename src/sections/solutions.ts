@@ -51,6 +51,7 @@ export function initSolutionsOrbit(): void {
   }
 
   function updateNameBackdrop(name: string): void {
+    if (mobileMotionQuery.matches) return;
     if (!nameBackdrop || name === currentBackdropName) return;
     currentBackdropName = name;
     gsap.to(nameBackdrop, {
