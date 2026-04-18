@@ -1770,17 +1770,17 @@
 @media (max-width: 600px) {
   .drawer {
     width: 100vw;
-    padding: 16px 16px 24px;
+    padding: 22px 18px calc(22px + env(safe-area-inset-bottom, 0px));
     border-left: none;
   }
   .drawer:before {
     right: 0;
   }
   .drawer-brand {
-    padding: 18px 70px 16px 16px;
+    padding: 0 58px 18px 0;
   }
   .drawer-link {
-    padding: 14px 16px;
+    padding: 0 34px 0 2px;
   }
   .dl-text {
     font-size: 1.02rem;
@@ -1928,13 +1928,13 @@
     padding-inline: 16px;
   }
   .drawer-close {
-    top: 18px;
-    right: 18px;
-    width: 42px;
-    height: 42px;
+    top: 20px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
   }
   .drawer-brand {
-    padding-right: 66px;
+    padding-right: 56px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
