@@ -238,82 +238,106 @@
 
 @media (max-width: 767px) {
   .section-solutions {
-    padding: 72px 0 42px !important;
-    min-height: auto !important;
-    overflow: hidden !important;
+    --solutions-mobile-stage-height: clamp(430px, 56svh, 540px);
+    --solutions-mobile-scroll: 180svh;
+    padding: 0 !important;
+    min-height: calc(100svh + var(--solutions-mobile-scroll)) !important;
+    overflow: visible !important;
   }
 
   .section-solutions .container {
-    min-height: auto !important;
-    display: block !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    position: sticky !important;
+    top: 0 !important;
+    min-height: 100svh !important;
+    display: grid !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    align-content: start !important;
+    padding-top: 76px !important;
+    padding-bottom: 34px !important;
   }
 
   .section-solutions .sec-head {
     max-width: 100% !important;
-    margin-bottom: 24px !important;
+    margin-bottom: 16px !important;
   }
 
   .section-solutions .solutions-carousel {
     width: 100% !important;
     margin-left: 0 !important;
-    display: block !important;
+    min-height: 0 !important;
+    display: grid !important;
+    align-items: start !important;
     overflow: visible !important;
-    perspective: none !important;
+    perspective: 1600px !important;
   }
 
   .section-solutions .solutions-stack-stage {
     width: 100% !important;
-    min-height: 0 !important;
-    display: block !important;
+    min-height: var(--solutions-mobile-stage-height) !important;
+    display: grid !important;
+    place-items: center !important;
+    position: relative !important;
+    overflow: visible !important;
   }
 
   .section-solutions .solutions-stack-stage::after {
-    display: none !important;
+    display: block !important;
+    width: min(360px, 78vw) !important;
+    bottom: 18px !important;
   }
 
   .section-solutions .solutions-grid {
     width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    display: grid !important;
-    gap: 18px !important;
+    height: var(--solutions-mobile-stage-height) !important;
+    min-height: var(--solutions-mobile-stage-height) !important;
+    display: block !important;
     overflow: visible !important;
-    transform-style: flat !important;
+    transform-style: preserve-3d !important;
   }
 
   .section-solutions .sol-card {
-    position: relative !important;
+    position: absolute !important;
     inset: auto !important;
-    top: auto !important;
-    left: auto !important;
-    width: min(100%, 430px) !important;
-    min-height: 0 !important;
-    margin: 0 auto !important;
-    transform: none !important;
-    opacity: 1 !important;
-    filter: none !important;
-    z-index: auto !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: min(86vw, 430px) !important;
+    min-height: 410px !important;
+    margin: 0 !important;
   }
 
   .section-solutions .solutions-name-bg {
-    position: relative !important;
-    left: auto !important;
+    position: absolute !important;
+    left: 50% !important;
     right: auto !important;
+    top: calc(100svh - 84px) !important;
     bottom: auto !important;
     display: block !important;
-    transform: none !important;
-    margin: 26px auto 0 !important;
-    max-width: 100% !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+    max-width: min(88vw, 430px) !important;
     white-space: normal !important;
     font-size: clamp(1.35rem, 7vw, 2rem) !important;
     line-height: 1.04 !important;
+    z-index: 2 !important;
   }
 }
 
 @media (max-width: 480px) {
+  .section-solutions {
+    --solutions-mobile-stage-height: clamp(380px, 52svh, 500px);
+    --solutions-mobile-scroll: 164svh;
+  }
+
+  .section-solutions .container {
+    padding-top: 72px !important;
+  }
+
   .section-solutions .sol-card {
-    width: min(100%, 340px) !important;
+    width: min(90vw, 336px) !important;
+    min-height: 360px !important;
+  }
+
+  .section-solutions .solutions-name-bg {
+    top: calc(100svh - 72px) !important;
   }
 }
