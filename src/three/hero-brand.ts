@@ -53,6 +53,7 @@ export function initHeroBrand3D(): HeroBrand3D | null {
     dragY: 0,
     dragX: 0,
     brandScale: 1,
+    layoutScale: 1,
   };
 
   const redMaterials = [
@@ -233,7 +234,7 @@ export function initHeroBrand3D(): HeroBrand3D | null {
       (solidMesh.material as THREE.MeshStandardMaterial).opacity = 0;
       (solidMesh.material as THREE.MeshStandardMaterial).transparent = true;
       solidMesh.renderOrder = 6;
-      (solidMesh.material as THREE.MeshStandardMaterial).depthWrite = true;
+      (solidMesh.material as THREE.MeshStandardMaterial).depthWrite = false;
       wordmarkGroup.add(solidMesh);
       solidLetters.push(solidMesh);
 
@@ -298,7 +299,7 @@ export function initHeroBrand3D(): HeroBrand3D | null {
         });
       }
     });
-    wordmarkGroup.position.set(0, -1.88, 0);
+    wordmarkGroup.position.set(0, -1.56, 0);
     canvas.classList.add('is-wordmark-ready');
     applyAssembly();
   }
@@ -410,29 +411,36 @@ export function initHeroBrand3D(): HeroBrand3D | null {
     const mobile = window.innerWidth <= 768;
     if (narrow) {
       camera.position.set(0, 0.0, 16.5);
-      brandRoot.scale.setScalar(0.58);
+      brandState.layoutScale = 0.58;
+      brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
       trianglePivot.scale.setScalar(0.54);
       trianglePivot.position.set(0, 1.6, 0);
+      wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.8, 0);
     } else if (mobile) {
       camera.position.set(0, 0.0, 14.5);
-      brandRoot.scale.setScalar(0.68);
+      brandState.layoutScale = 0.68;
+      brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
       trianglePivot.scale.setScalar(0.60);
       trianglePivot.position.set(0, 1.8, 0);
+      wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.9, 0);
     } else if (window.innerWidth <= 1024) {
       camera.position.set(0, 0.0, 13.2);
-      brandRoot.scale.setScalar(0.78);
+      brandState.layoutScale = 0.78;
+      brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
       trianglePivot.scale.setScalar(0.70);
       trianglePivot.position.set(0, 1.6, 0);
+      wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.7, 0);
     } else {
       camera.position.set(0, 0, 16.5);
-      brandRoot.scale.setScalar(0.7);
+      brandState.layoutScale = 0.7;
+      brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
       trianglePivot.scale.setScalar(0.78);
-      wordmarkGroup.scale.setScalar(0.94);
+      wordmarkGroup.scale.setScalar(1.04);
       trianglePivot.position.set(0, 0.42, 0);
-      wordmarkGroup.position.set(0, -1.88, 0);
+      wordmarkGroup.position.set(0, -1.56, 0);
     }
     if (!canInteract()) {
       trianglePivot.rotation.x = -0.05;
@@ -504,9 +512,10 @@ export function initHeroBrand3D(): HeroBrand3D | null {
       dragVelX *= 0.9;
     }
 
-    brandRoot.scale.x += (brandState.brandScale - brandRoot.scale.x) * 0.08;
-    brandRoot.scale.y += (brandState.brandScale - brandRoot.scale.y) * 0.08;
-    brandRoot.scale.z += (brandState.brandScale - brandRoot.scale.z) * 0.08;
+    const targetBrandScale = brandState.layoutScale * brandState.brandScale;
+    brandRoot.scale.x += (targetBrandScale - brandRoot.scale.x) * 0.08;
+    brandRoot.scale.y += (targetBrandScale - brandRoot.scale.y) * 0.08;
+    brandRoot.scale.z += (targetBrandScale - brandRoot.scale.z) * 0.08;
 
     renderer.render(scene, camera);
   }());

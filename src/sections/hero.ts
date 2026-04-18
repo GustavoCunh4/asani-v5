@@ -50,6 +50,7 @@ export function initHeroIntro(
 ): void {
   const hero = document.getElementById('hero');
   const brandCanvas = document.getElementById('heroBrand3D') as HTMLCanvasElement | null;
+  const brandWordmark = document.querySelector<HTMLElement>('.hero-brand-wordmark');
   const heroBody = document.querySelector<HTMLElement>('.hero-body');
   const blocks = Array.from(document.querySelectorAll<HTMLElement>('.h1-block'));
   const subWrap = document.querySelector<HTMLElement>('.hero-sub-wrap');
@@ -79,6 +80,9 @@ export function initHeroIntro(
 
   gsap.set(hero, { opacity: 1, visibility: 'visible', clearProps: 'pointerEvents' });
   gsap.set(brandCanvas, { opacity: 0, scale: brandInitScale, filter: `blur(${brandInitBlur})`, transformOrigin: 'center center', clearProps: 'y,yPercent' });
+  if (brandWordmark) {
+    gsap.set(brandWordmark, { opacity: 0, scale: brandInitScale, filter: `blur(${brandInitBlur})`, transformOrigin: 'center center' });
+  }
   gsap.set(heroBody, { opacity: 0 });
   gsap.set(blocks, { y: '110%' });
   if (subWrap) gsap.set(subWrap, { opacity: 0, y: 22 });
@@ -105,6 +109,15 @@ export function initHeroIntro(
     duration: brandInDuration,
     ease: 'expo.out',
   }, 0.02);
+  if (brandWordmark && !isMobileBoot) {
+    introTl.to(brandWordmark, {
+      opacity: 0.94,
+      scale: 1,
+      filter: 'blur(0px)',
+      duration: brandInDuration,
+      ease: 'expo.out',
+    }, 0.02);
+  }
 
   if (heroBrand3D) {
     const assemblyState = { progress: 0 };
@@ -186,6 +199,14 @@ export function initHeroIntro(
     ease: 'power2.inOut',
     duration: 0.9,
   }, 0.18);
+  if (brandWordmark) {
+    tl.to(brandWordmark, {
+      opacity: 0.12,
+      scale: 1,
+      ease: 'power2.inOut',
+      duration: 0.9,
+    }, 0.18);
+  }
 
   if (heroBrand3D) {
     const brandFadeState = { progress: 0 };
