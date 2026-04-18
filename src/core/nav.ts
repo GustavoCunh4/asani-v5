@@ -144,10 +144,16 @@ export function initHeroTypewriter(): void {
   if (!h1 || prefersReducedMotion.matches) return;
 
   const blocks = Array.from(h1.querySelectorAll<HTMLElement>('.h1-block'));
+  const accentGroups = Array.from(h1.querySelectorAll<HTMLElement>('.hero-accent'));
   const CHAR_MS = 26;
   const LINE_MS = 90;
   const START_MS = 160;
   let timeline = START_MS;
+
+  h1.classList.add('is-typewriting');
+  accentGroups.forEach((accent) => {
+    accent.style.opacity = '0';
+  });
 
   function wrapBlock(block: HTMLElement): HTMLElement[] {
     const chars: HTMLElement[] = [];
@@ -188,6 +194,8 @@ export function initHeroTypewriter(): void {
     chars.forEach((char) => {
       const delay = timeline;
       window.setTimeout(() => {
+        const accent = char.closest<HTMLElement>('.hero-accent');
+        if (accent) accent.style.opacity = '1';
         char.style.opacity = '1';
         char.after(cursor);
       }, delay);
@@ -200,6 +208,10 @@ export function initHeroTypewriter(): void {
   });
 
   window.setTimeout(() => {
+    accentGroups.forEach((accent) => {
+      accent.style.opacity = '';
+    });
+    h1.classList.remove('is-typewriting');
     cursor.classList.add('hero-cursor--done');
   }, timeline + 320);
 }

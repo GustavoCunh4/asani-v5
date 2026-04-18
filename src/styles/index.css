@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* ─── Asani v5 — stylesheet entry point ───────────────────────────────────────
    Import order matters: vars → base → nav → hero → sections → portal → layout → stats → solutions-stack
    Each file covers a single layer of concern. Never add rules here directly.

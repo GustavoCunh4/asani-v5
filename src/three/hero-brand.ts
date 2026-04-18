@@ -411,26 +411,26 @@ export function initHeroBrand3D(): HeroBrand3D | null {
     const mobile = window.innerWidth <= 768;
     if (narrow) {
       camera.position.set(0, 0.0, 16.5);
-      brandState.layoutScale = 0.52;
+      brandState.layoutScale = 0.60;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.50);
-      trianglePivot.position.set(0, 2.52, 0);
+      trianglePivot.scale.setScalar(0.58);
+      trianglePivot.position.set(0, 2.18, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.8, 0);
     } else if (mobile) {
       camera.position.set(0, 0.0, 14.5);
-      brandState.layoutScale = 0.60;
+      brandState.layoutScale = 0.68;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.56);
-      trianglePivot.position.set(0, 2.24, 0);
+      trianglePivot.scale.setScalar(0.64);
+      trianglePivot.position.set(0, 1.98, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.9, 0);
     } else if (window.innerWidth <= 1024) {
       camera.position.set(0, 0.0, 14.8);
-      brandState.layoutScale = 0.70;
+      brandState.layoutScale = 0.78;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.66);
-      trianglePivot.position.set(0, 2.42, 0);
+      trianglePivot.scale.setScalar(0.74);
+      trianglePivot.position.set(0, 2.16, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.86, 0);
     } else {

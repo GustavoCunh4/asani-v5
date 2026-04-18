@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .section-numbers {
   padding: 0;
   background: var(--bg-alt);
@@ -1635,6 +1636,21 @@
     padding: 0 24px;
   }
 }
+@media (min-width: 1025px) and (max-width: 1280px), (min-width: 1025px) and (max-height: 900px) {
+  .hero-body {
+    height: 100svh;
+    padding: clamp(230px, 32svh, 320px) 40px 44px;
+    align-content: start;
+    row-gap: 20px;
+  }
+  .hero-h1 {
+    font-size: clamp(2.3rem, 4.45vw, 4.1rem);
+    max-width: 760px;
+  }
+  .hero-sub-wrap {
+    gap: 16px;
+  }
+}
 @media (max-width: 1280px) {
   .hero-body {
     padding-inline: 32px;
@@ -1650,6 +1666,19 @@
   }
   .footer-wrap {
     gap: 56px;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) and (max-height: 920px) {
+  .hero-body {
+    padding-top: clamp(260px, 31svh, 320px);
+    padding-bottom: calc(44px + env(safe-area-inset-bottom, 0px));
+    gap: 14px;
+  }
+  .hero-h1 {
+    font-size: clamp(2rem, 5.8vw, 3.55rem);
+  }
+  .hero-sub-wrap {
+    gap: 14px;
   }
 }
 @media (max-width: 900px) {
@@ -1676,8 +1705,8 @@
 @media (max-width: 768px) {
   :root {
     --section-v: 80px;
-    --hero-mobile-top: clamp(200px, 44svh, 420px);
-    --hero-mobile-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    --hero-mobile-top: clamp(190px, 38svh, 340px);
+    --hero-mobile-bottom: calc(62px + env(safe-area-inset-bottom, 0px));
   }
   #hero {
     min-height: auto;
@@ -1842,8 +1871,8 @@
 }
 @media (max-width: 480px) {
   :root {
-    --hero-mobile-top: clamp(210px, 44svh, 390px);
-    --hero-mobile-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    --hero-mobile-top: clamp(200px, 37svh, 326px);
+    --hero-mobile-bottom: calc(58px + env(safe-area-inset-bottom, 0px));
   }
   .hero-stars {
     opacity: 0.42;
@@ -1924,8 +1953,8 @@
 @media (max-width: 360px) {
   :root {
     --nav-h: 72px;
-    --hero-mobile-top: 39svh;
-    --hero-mobile-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    --hero-mobile-top: 35svh;
+    --hero-mobile-bottom: calc(54px + env(safe-area-inset-bottom, 0px));
   }
   .nav-wrap {
     padding: 0 14px;

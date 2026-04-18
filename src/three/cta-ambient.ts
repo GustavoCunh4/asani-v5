@@ -6,6 +6,7 @@ import { getScrollVelocity } from '../core/lenis';
 export function initCtaAmbient(): void {
   const canvas = document.getElementById('ctaCanvas') as HTMLCanvasElement | null;
   const section = document.getElementById('contato');
+  if (!canvas || !section) return;
 
   canvas.style.display = 'block';
   canvas.style.opacity = '0';

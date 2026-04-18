@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Solutions stack layout */
 .section-solutions {
   --solutions-desktop-stage-height: clamp(520px, 34vw, 610px);
@@ -204,6 +205,34 @@
 
   .section-solutions .sol-card {
     min-height: 448px !important;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 900px) {
+  .section-solutions {
+    --solutions-desktop-stage-height: clamp(430px, 52svh, 500px);
+    --solutions-desktop-card-width: min(500px, 40vw);
+    --solutions-desktop-card-top: 50%;
+  }
+
+  .section-solutions .container {
+    padding-top: clamp(70px, 8svh, 92px) !important;
+  }
+
+  .section-solutions .sec-head {
+    margin-bottom: clamp(14px, 2svh, 22px) !important;
+  }
+
+  .section-solutions .sol-card {
+    min-height: clamp(360px, 46svh, 410px) !important;
+  }
+
+  .section-solutions .sol-card-inner {
+    padding: clamp(28px, 3.2svh, 34px) 28px !important;
+  }
+
+  .section-solutions .sol-num {
+    font-size: clamp(2.7rem, 5.2vw, 4.3rem) !important;
   }
 }
 

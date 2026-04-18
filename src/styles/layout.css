@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* ==========================================================
    CHAPTER RAIL — horizontal cinematic navigation
    JS (initHorizontalRail) pins the wrapper and scrubs the
@@ -192,7 +193,7 @@
 
 /* ==========================================================
    MOBILE: stack chapters as normal vertical sections
-   JS skips initHorizontalRail() on mobile.
+   JS s initHorizontalRail() on mobile.
 ========================================================== */
 @media (max-width: 767px) {
   #chapter-rail-wrapper { overflow: visible; }

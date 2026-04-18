@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Hero 3D brand — na frente do globo, atrás do conteúdo */
 #heroBrand3D {
   position: absolute;
@@ -237,6 +238,9 @@
   -webkit-text-fill-color:transparent;
   color:var(--red);
   animation:accentShimmer 4s linear infinite;
+}
+.hero-h1.is-typewriting .hero-accent{
+  transition:opacity 0.05s linear;
 }
 @keyframes accentShimmer{
   0%{background-position:0% center;}
