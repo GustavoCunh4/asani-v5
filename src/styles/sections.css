@@ -1652,9 +1652,12 @@
 @media (max-width: 768px) {
   :root {
     --section-v: 80px;
+    --hero-mobile-top: 43svh;
+    --hero-mobile-bottom: calc(86px + env(safe-area-inset-bottom, 0px));
   }
   #hero {
     min-height: auto;
+    height: 100svh;
   }
   .hero-stars {
     opacity: 0.54;
@@ -1663,10 +1666,10 @@
     opacity: 0.64;
   }
   .hero-body {
-    min-height: 100dvh;
-    height: 100dvh;
-    padding-top: 50svh;
-    padding-bottom: 24px;
+    min-height: 100svh;
+    height: 100svh;
+    padding-top: var(--hero-mobile-top);
+    padding-bottom: var(--hero-mobile-bottom);
     padding-inline: 20px;
     display: flex;
     flex-direction: column;
@@ -1813,6 +1816,10 @@
   }
 }
 @media (max-width: 480px) {
+  :root {
+    --hero-mobile-top: 40svh;
+    --hero-mobile-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
   .hero-stars {
     opacity: 0.42;
   }
@@ -1837,8 +1844,7 @@
     max-width: 10.5ch;
   }
   .hero-body {
-    padding-top: 48svh;
-    padding-bottom: 20px;
+    padding-bottom: var(--hero-mobile-bottom);
     padding-inline: 16px;
     gap: 12px;
   }
@@ -1893,6 +1899,8 @@
 @media (max-width: 360px) {
   :root {
     --nav-h: 72px;
+    --hero-mobile-top: 39svh;
+    --hero-mobile-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
   .nav-wrap {
     padding: 0 14px;
@@ -1903,9 +1911,6 @@
   .nav-toggle {
     width: 42px;
     height: 42px;
-  }
-  .hero-body {
-    padding-top: 52svh;
   }
   .hero-h1 {
     font-size: clamp(1.44rem, 9vw, 1.9rem);
