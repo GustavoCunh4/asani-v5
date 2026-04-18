@@ -12,6 +12,8 @@ export function initSolutionsOrbit(): void {
   const cards = Array.from(track.querySelectorAll<HTMLElement>('.sol-card'));
   if (!cards.length) return;
 
+  const mobileMotionQuery = window.matchMedia('(max-width: 767px), (pointer: coarse)');
+
   let activeIndex = 0;
   let activeProgress = 0;
 
@@ -49,6 +51,7 @@ export function initSolutionsOrbit(): void {
   }
 
   function updateNameBackdrop(name: string): void {
+    if (mobileMotionQuery.matches) return;
     if (!nameBackdrop || name === currentBackdropName) return;
     currentBackdropName = name;
     gsap.to(nameBackdrop, {
@@ -244,16 +247,17 @@ export function initSolutionsOrbit(): void {
     return Math.round(Math.max(1, cards.length - 1) * window.innerHeight * factor);
   };
 
-  const scrub = window.innerWidth <= 900 ? 0.6 : 0.9;
+  const usePinnedStack = !mobileMotionQuery.matches;
+  const scrub = mobileMotionQuery.matches ? 0.35 : window.innerWidth <= 900 ? 0.6 : 0.9;
 
   ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: () => `+=${scrollDistance()}`,
-    pin: true,
-    pinSpacing: true,
+    end: () => (usePinnedStack ? `+=${scrollDistance()}` : 'bottom bottom'),
+    pin: usePinnedStack,
+    pinSpacing: usePinnedStack,
     scrub,
-    anticipatePin: 1,
+    anticipatePin: usePinnedStack ? 1 : 0,
     invalidateOnRefresh: true,
     onRefresh: (self) => { renderFromScrollProgress(self.progress); },
     onUpdate:  (self) => { renderFromScrollProgress(self.progress); },

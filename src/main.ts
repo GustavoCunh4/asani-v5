@@ -42,8 +42,6 @@ function resetScrollPosition(): void {
 }
 
 resetScrollPosition();
-window.addEventListener('beforeunload', resetScrollPosition);
-window.addEventListener('load', resetScrollPosition);
 
 // ─── Nav + drawer run regardless of motion preference ─────────────────────────
 initNav();

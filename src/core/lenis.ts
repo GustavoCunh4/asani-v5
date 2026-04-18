@@ -8,6 +8,7 @@ let lenis: Lenis | null = null;
 let scrollVelocity = 0;
 let resizeTimer = 0;
 let nativeScrollPatched = false;
+const coarsePointerQuery = window.matchMedia('(pointer: coarse)');
 
 // ─── Public getters ────────────────────────────────────────────────────────────
 
@@ -73,6 +74,7 @@ export function initLenis(): void {
 // ─── Resize helpers ────────────────────────────────────────────────────────────
 
 function handleResize(): void {
+  if (coarsePointerQuery.matches) return;
   window.clearTimeout(resizeTimer);
   resizeTimer = window.setTimeout(forceRefresh, 180);
 }
