@@ -306,14 +306,15 @@
   }
 
   .section-solutions .solutions-name-bg {
-    position: sticky !important;
-    left: 50% !important;
+    position: relative !important;
+    left: auto !important;
     right: auto !important;
-    top: calc(100svh - 84px) !important;
+    top: auto !important;
     bottom: auto !important;
     display: block !important;
-    transform: translateX(-50%) !important;
-    margin: 18px 0 0 !important;
+    transform: none !important;
+    margin: 14px auto 0 !important;
+    width: min(88vw, 430px) !important;
     max-width: min(88vw, 430px) !important;
     white-space: normal !important;
     font-size: clamp(1.35rem, 7vw, 2rem) !important;
@@ -337,7 +338,4 @@
     min-height: 360px !important;
   }
 
-  .section-solutions .solutions-name-bg {
-    top: calc(100svh - 72px) !important;
-  }
 }
