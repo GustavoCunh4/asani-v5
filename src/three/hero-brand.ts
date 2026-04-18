@@ -411,26 +411,26 @@ export function initHeroBrand3D(): HeroBrand3D | null {
     const mobile = window.innerWidth <= 768;
     if (narrow) {
       camera.position.set(0, 0.0, 16.5);
-      brandState.layoutScale = 0.44;
+      brandState.layoutScale = 0.52;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.42);
-      trianglePivot.position.set(0, 2.9, 0);
+      trianglePivot.scale.setScalar(0.50);
+      trianglePivot.position.set(0, 2.52, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.8, 0);
     } else if (mobile) {
       camera.position.set(0, 0.0, 14.5);
-      brandState.layoutScale = 0.52;
+      brandState.layoutScale = 0.60;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.48);
-      trianglePivot.position.set(0, 2.5, 0);
+      trianglePivot.scale.setScalar(0.56);
+      trianglePivot.position.set(0, 2.24, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.9, 0);
     } else if (window.innerWidth <= 1024) {
       camera.position.set(0, 0.0, 14.8);
-      brandState.layoutScale = 0.62;
+      brandState.layoutScale = 0.70;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.58);
-      trianglePivot.position.set(0, 2.72, 0);
+      trianglePivot.scale.setScalar(0.66);
+      trianglePivot.position.set(0, 2.42, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.86, 0);
     } else {
@@ -504,7 +504,7 @@ export function initHeroBrand3D(): HeroBrand3D | null {
         trianglePivot.rotation.y += 0.009 + dragVelY;
         trianglePivot.rotation.x += (-pointer.y * 0.08 - trianglePivot.rotation.x) * 0.035;
       } else {
-        trianglePivot.rotation.y += 0.0045;
+        trianglePivot.rotation.y += 0.0072;
         trianglePivot.rotation.x += (-0.05 - trianglePivot.rotation.x) * 0.08;
       }
       dragVelY *= 0.92;
