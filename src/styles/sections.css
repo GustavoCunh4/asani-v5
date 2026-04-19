@@ -1900,7 +1900,11 @@
   .hero-body {
     padding-bottom: var(--hero-mobile-bottom);
     padding-inline: 16px;
-    gap: 10px;
+    gap: 8px;
+  }
+  .hero-brand-id {
+    margin-top: 12px;
+    margin-bottom: 8px;
   }
   .hero-sub-wrap {
     gap: 12px;
@@ -1948,15 +1952,6 @@
   }
   .footer-bottom {
     padding: 18px 16px;
-  }
-}
-@media (max-width: 400px) {
-  .hero-brand-id {
-    margin-top: 18px;
-    margin-bottom: 8px;
-  }
-  .hero-body {
-    gap: 8px;
   }
 }
 @media (max-width: 360px) {

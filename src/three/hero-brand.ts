@@ -335,12 +335,13 @@ export function initHeroBrand3D(): HeroBrand3D | null {
   function applyAssembly(): void {
     const t = brandState.assembly;
     const eased = t * t * (3 - 2 * t);
+    const assemblySpread = canInteract() ? 1 : 0.08;
 
     trianglePieces.forEach((piece) => {
       const origin = piece.userData.origin as THREE.Vector3;
       piece.position.set(
-        origin.x * (1 - eased),
-        origin.y * (1 - eased),
+        origin.x * assemblySpread * (1 - eased),
+        origin.y * assemblySpread * (1 - eased),
         0
       );
       (piece.material as THREE.MeshStandardMaterial).opacity = brandState.triangleOpacity;
@@ -407,31 +408,22 @@ export function initHeroBrand3D(): HeroBrand3D | null {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
 
-    const compactPhone = window.innerWidth <= 400;
     const narrow = window.innerWidth <= 480;
     const mobile = window.innerWidth <= 768;
-    if (compactPhone) {
+    if (narrow) {
       camera.position.set(0, 0.0, 16.5);
       brandState.layoutScale = 0.60;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.58);
-      trianglePivot.position.set(0, 2.72, 0);
-      wordmarkGroup.scale.setScalar(1);
-      wordmarkGroup.position.set(0, -0.8, 0);
-    } else if (narrow) {
-      camera.position.set(0, 0.0, 16.5);
-      brandState.layoutScale = 0.60;
-      brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.58);
-      trianglePivot.position.set(0, 2.18, 0);
+      trianglePivot.scale.setScalar(0.42);
+      trianglePivot.position.set(0, 2.62, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.8, 0);
     } else if (mobile) {
       camera.position.set(0, 0.0, 14.5);
-      brandState.layoutScale = 0.68;
+      brandState.layoutScale = 0.62;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
-      trianglePivot.scale.setScalar(0.64);
-      trianglePivot.position.set(0, 1.98, 0);
+      trianglePivot.scale.setScalar(0.42);
+      trianglePivot.position.set(0, 2.62, 0);
       wordmarkGroup.scale.setScalar(1);
       wordmarkGroup.position.set(0, -0.9, 0);
     } else if (window.innerWidth <= 1024) {
@@ -515,7 +507,7 @@ export function initHeroBrand3D(): HeroBrand3D | null {
         trianglePivot.rotation.y += 0.009 + dragVelY;
         trianglePivot.rotation.x += (-pointer.y * 0.08 - trianglePivot.rotation.x) * 0.035;
       } else {
-        trianglePivot.rotation.y += 0.0072;
+        trianglePivot.rotation.y += 0.011;
         trianglePivot.rotation.x += (-0.05 - trianglePivot.rotation.x) * 0.08;
       }
       dragVelY *= 0.92;
