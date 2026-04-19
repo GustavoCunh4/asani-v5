@@ -259,8 +259,8 @@
 .hero-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-start;}
 .hero-scroll-cue{display:none;}
 .scroll-track{width:1px;height:52px;background:var(--border);position:relative;overflow:hidden;}
-.scroll-thumb{position:absolute;top:-100%;width:100%;height:50%;background:var(--red);animation:scrollThumb 2.4s ease-in-out infinite;}
-@keyframes scrollThumb{0%{top:-50%;}100%{top:100%;}}
+.scroll-thumb{position:absolute;top:0;width:100%;height:50%;background:var(--red);animation:scrollThumb 2.4s ease-in-out infinite;transform:translateY(-100%);}
+@keyframes scrollThumb{0%{transform:translateY(-100%);}100%{transform:translateY(200%);}}
 
 @media (max-width: 768px) {
   #heroGlobe { opacity: 0.30; transform:scale(0.58) translateY(-23%); transform-origin:center 34%; }

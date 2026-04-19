@@ -263,10 +263,6 @@
   display: block;
 }
 
-#chapter-progress {
-  display: none !important;
-}
-
 .chapter {
   width: 100%;
   min-height: auto;

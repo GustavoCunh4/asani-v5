@@ -186,10 +186,10 @@ export function initTechTriangle(): void {
   resize();
   window.addEventListener('resize', resize, { passive: true });
 
-  const io = new IntersectionObserver((entries) => {
+  const _io = new IntersectionObserver((entries) => {
     for (const entry of entries) active = entry.isIntersecting;
   }, { threshold: 0.01 });
-  io.observe(section);
+  _io.observe(section);
 
   rafId = requestAnimationFrame(tick);
 }

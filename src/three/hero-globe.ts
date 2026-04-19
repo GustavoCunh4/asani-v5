@@ -350,13 +350,15 @@ export function initHeroGlobe(): void {
   window.addEventListener('resize', resize, { passive: true });
 
   let active = true;
-  new IntersectionObserver(
+  const _heroObserver = new IntersectionObserver(
     (entries) => entries.forEach((e) => { active = e.isIntersecting; }),
     { threshold: 0.08 }
-  ).observe(hero);
+  );
+  _heroObserver.observe(hero);
 
+  let _rafId = 0;
   (function tick() {
-    window.requestAnimationFrame(tick);
+    _rafId = window.requestAnimationFrame(tick);
     if (document.hidden || !active) return;
 
     if (!isDragging) {

@@ -95,6 +95,8 @@ export function initCtaAmbient(): void {
   resize();
   window.addEventListener('resize', resize, { passive: true });
 
+  material.dispose();
+
   gsap.to(canvas, {
     opacity: 1,
     duration: 0.44,
@@ -108,6 +110,7 @@ export function initCtaAmbient(): void {
   });
 
   let active = false;
+  let _rafId = 0;
   const clock = new THREE.Clock();
   const visibilityObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => { active = entry.isIntersecting; });
@@ -115,7 +118,7 @@ export function initCtaAmbient(): void {
   visibilityObserver.observe(section);
 
   (function render() {
-    window.requestAnimationFrame(render);
+    _rafId = window.requestAnimationFrame(render);
     if (document.hidden || !active) return;
 
     const time = clock.getElapsedTime();

@@ -3,15 +3,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { isDesktop } from '../core/media';
 import { scramble } from './scramble';
 
-// Fallback observer for data-reveal elements when GSAP is not the driver
-const revealObserver = new IntersectionObserver((entries, observer) => {
-  entries.forEach((entry) => {
-    if (!entry.isIntersecting) return;
-    entry.target.classList.add('is-visible');
-    observer.unobserve(entry.target);
-  });
-}, { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
-
 export function initRevealClasses(): void {
   const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
   if (!nodes.length) return;

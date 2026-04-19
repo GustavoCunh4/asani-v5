@@ -5,9 +5,17 @@ export function scramble(element: HTMLElement, durationMs: number): void {
 
   const original = element.textContent ?? '';
   const totalFrames = Math.round((durationMs / 1000) * 40);
+  const frameInterval = 1000 / 40;
   let frame = 0;
+  let lastTime = 0;
 
-  const timer = window.setInterval(() => {
+  function update(now: number): void {
+    if (now - lastTime < frameInterval) {
+      window.requestAnimationFrame(update);
+      return;
+    }
+    lastTime = now;
+
     element.textContent = original.split('').map((char, index) => {
       if (char === ' ' || char === '/') return char;
       const progress = frame / totalFrames;
@@ -19,7 +27,10 @@ export function scramble(element: HTMLElement, durationMs: number): void {
     frame += 1;
     if (frame > totalFrames) {
       element.textContent = original;
-      window.clearInterval(timer);
+      return;
     }
-  }, 1000 / 40);
+    window.requestAnimationFrame(update);
+  }
+
+  window.requestAnimationFrame(update);
 }

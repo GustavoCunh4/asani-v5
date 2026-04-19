@@ -407,9 +407,18 @@ export function initHeroBrand3D(): HeroBrand3D | null {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
 
+    const compactPhone = window.innerWidth <= 400;
     const narrow = window.innerWidth <= 480;
     const mobile = window.innerWidth <= 768;
-    if (narrow) {
+    if (compactPhone) {
+      camera.position.set(0, 0.0, 16.5);
+      brandState.layoutScale = 0.60;
+      brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
+      trianglePivot.scale.setScalar(0.58);
+      trianglePivot.position.set(0, 2.72, 0);
+      wordmarkGroup.scale.setScalar(1);
+      wordmarkGroup.position.set(0, -0.8, 0);
+    } else if (narrow) {
       camera.position.set(0, 0.0, 16.5);
       brandState.layoutScale = 0.60;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
@@ -488,15 +497,17 @@ export function initHeroBrand3D(): HeroBrand3D | null {
   canvas.style.cursor = canInteract() ? 'grab' : 'default';
   window.addEventListener('resize', resize, { passive: true });
 
-  new IntersectionObserver(
+  const _brandObserver = new IntersectionObserver(
     (entries) => entries.forEach((entry) => { active = entry.isIntersecting; }),
     { threshold: 0.08 }
-  ).observe(hero);
+  );
+  _brandObserver.observe(hero);
 
   setBrandState({ assembly: 0, wordmarkOpacity: isDesktopBrand ? 1 : 0, triangleOpacity: 1 });
 
+  let _rafId = 0;
   (function tick() {
-    window.requestAnimationFrame(tick);
+    _rafId = window.requestAnimationFrame(tick);
     if (document.hidden || !active) return;
 
     if (!isDragging) {
