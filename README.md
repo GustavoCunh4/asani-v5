@@ -24,7 +24,7 @@ npm run dev
 O Vite exibira uma URL local, normalmente:
 
 ```txt
-http://localhost:5173/asani-v5/
+http://localhost:5173/
 ```
 
 Use essa URL para testar o site durante o desenvolvimento.
@@ -63,18 +63,19 @@ Build command: npm run build
 Output directory: docs
 ```
 
-## Configuracao de caminho base
+## Caminho base de publicacao
 
 O arquivo `vite.config.ts` define:
 
 ```ts
-base: '/asani-v5/'
+base: '/'
 ```
 
-Esse valor foi usado para visualizacao em GitHub Pages. Para publicar no dominio raiz, por exemplo `https://empresa.com/`, ajuste para:
+Esse valor deixa o projeto pronto para publicar na raiz de um dominio, por exemplo:
 
-```ts
-base: '/'
+```txt
+https://empresa.com/
+https://cliente.vercel.app/
 ```
 
 Para publicar em uma subpasta, por exemplo `https://empresa.com/site/`, use:
