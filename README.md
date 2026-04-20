@@ -71,7 +71,7 @@ O arquivo `vite.config.ts` define:
 base: '/asani-v5/'
 ```
 
-Esse valor foi usado para visualizacao em GitHub Pages. Para publicar no dominio raiz de um cliente, por exemplo `https://empresa.com/`, ajuste para:
+Esse valor foi usado para visualizacao em GitHub Pages. Para publicar no dominio raiz, por exemplo `https://empresa.com/`, ajuste para:
 
 ```ts
 base: '/'
