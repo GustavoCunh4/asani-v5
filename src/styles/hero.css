@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/* Hero 3D brand — na frente do globo, atrás do conteúdo */
+/* Marca 3D do hero: na frente do globo e atras do conteudo. */
 #heroBrand3D {
   position: absolute;
   inset: 0;
@@ -12,7 +12,6 @@
   transition: none;
   touch-action: none;
 }
-#heroBrand3D.is-wordmark-ready + .hero-brand-fallback,
 #heroBrand3D.is-brand-ready + .hero-brand-fallback {
   opacity: 0;
 }
@@ -77,7 +76,7 @@
   z-index:1;
   overflow:hidden;
 }
-/* Spacer que empurra as seções para baixo enquanto o hero fica fixo */
+/* Espacador usado enquanto o hero permanece fixo. */
 #hero-scroll-space{
   height:200vh;
   pointer-events:none;
@@ -164,7 +163,7 @@
   -webkit-mask-image:none;
   mask-image:none;
 }
-/* Globo Three.js no hero — camada sobre o shader, sob o conteúdo */
+/* Globo Three.js do hero: sobre o shader e abaixo do conteudo. */
 #heroGlobe {
   position: absolute;
   inset: 0;
@@ -174,15 +173,11 @@
   z-index: 2;
   opacity: 0.72;
 }
-/* grab cursor on hero — inherited by hero-body children, overridden by a/button */
 #hero { cursor: grab; }
 #hero:active { cursor: grabbing; }
-/* Mobile media query moved here — after all base rules to win the cascade */
 
 #opening-stage{position:relative;z-index:1;}
-/* Seções deslizam por cima do hero fixo — fundo sólido obrigatório */
 .chapter{position:relative;z-index:10;background:var(--bg);}
-/* main-content sem background — spacer deve ser transparente para hero aparecer */
 #main-content{position:relative;z-index:10;}
 #hero-scroll-space{background:transparent;}
 .hero-body{
@@ -212,7 +207,7 @@
 .hero-h1 .h1-block:nth-child(2){transition-delay:0.12s;}
 .hero-h1 .h1-block:nth-child(3){transition-delay:0.22s;}
 .hero-h1 .h1-block:nth-child(4){transition-delay:0.32s;}
-/* Typewriter */
+/* Efeito de digitacao do titulo. */
 .hero-char{opacity:0;transition:opacity 0.05s linear;}
 .hero-cursor{
   display:inline-block;

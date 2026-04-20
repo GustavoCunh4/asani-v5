@@ -134,6 +134,37 @@ export function initScrollAnimations(): void {
 export function initParallax(): void {
   if (!isDesktop()) return;
 
+  const heroSpacer = document.getElementById('hero-scroll-space');
+  const heroStars = document.querySelector<HTMLElement>('.hero-stars');
+  const heroAmbient = document.getElementById('heroAmbient');
+
+  if (heroSpacer && heroStars) {
+    gsap.to(heroStars, {
+      y: -18,
+      scale: 1.015,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: heroSpacer,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 0.6,
+      },
+    });
+  }
+
+  if (heroSpacer && heroAmbient) {
+    gsap.to(heroAmbient, {
+      y: -10,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: heroSpacer,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 0.7,
+      },
+    });
+  }
+
   document.querySelectorAll<HTMLElement>('.sec-head').forEach((head) => {
     const section = head.closest('section');
     if (!section) return;
@@ -148,5 +179,47 @@ export function initParallax(): void {
         scrub: 0.4,
       },
     });
+  });
+
+  document.querySelectorAll<HTMLElement>('.proc-body').forEach((body, index) => {
+    const item = body.closest<HTMLElement>('.proc-item');
+    if (!item) return;
+
+    gsap.fromTo(
+      body,
+      { y: 10 + index * 2 },
+      {
+        y: -10 - index * 2,
+        ease: 'none',
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: item,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 0.55,
+        },
+      }
+    );
+  });
+
+  document.querySelectorAll<HTMLElement>('.founder-info').forEach((info, index) => {
+    const founder = info.closest<HTMLElement>('.founder');
+    if (!founder) return;
+
+    gsap.fromTo(
+      info,
+      { y: 12 + index * 4 },
+      {
+        y: -12 - index * 4,
+        ease: 'none',
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: founder,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 0.6,
+        },
+      }
+    );
   });
 }

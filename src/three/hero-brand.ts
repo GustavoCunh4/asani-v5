@@ -1,11 +1,8 @@
 import * as THREE from 'three';
-import { FontLoader, Font } from 'three/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 export interface HeroBrand3D {
   canvas: HTMLCanvasElement;
   setAssembly(value: number): void;
-  setWordmarkOpacity(value: number): void;
   setTriangleOpacity(value: number): void;
   setBrandScale(value: number): void;
 }
@@ -23,31 +20,36 @@ export function initHeroBrand3D(): HeroBrand3D | null {
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
   renderer.setClearColor(0x000000, 0);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.18;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(24, 1, 0.1, 100);
   camera.position.set(0, 0, 16.5);
 
-  const hemi = new THREE.HemisphereLight(0xffffff, 0xeee8e4, 0.68);
+  const hemi = new THREE.HemisphereLight(0xffffff, 0xf4ece8, 0.92);
   scene.add(hemi);
 
-  const key = new THREE.DirectionalLight(0xffffff, 0.78);
-  key.position.set(4.5, 5.5, 7.5);
+  const key = new THREE.DirectionalLight(0xffffff, 1.08);
+  key.position.set(4.8, 6.4, 8.2);
   scene.add(key);
 
-  const fill = new THREE.PointLight(0xfff4ee, 0.42, 30, 2);
-  fill.position.set(-5.2, 1.4, 5.8);
+  const fill = new THREE.PointLight(0xfff2ed, 0.72, 34, 2);
+  fill.position.set(-5.4, 2.0, 6.2);
   scene.add(fill);
+
+  const rim = new THREE.DirectionalLight(0xffd7dc, 0.36);
+  rim.position.set(-3.8, 2.8, 5.2);
+  scene.add(rim);
 
   const brandRoot = new THREE.Group();
   const trianglePivot = new THREE.Group();
-  const wordmarkGroup = new THREE.Group();
-  brandRoot.add(trianglePivot, wordmarkGroup);
+  brandRoot.add(trianglePivot);
   scene.add(brandRoot);
 
   const brandState = {
     assembly: 0,
-    wordmarkOpacity: 1,
     triangleOpacity: 1,
     triangleSpin: 0,
     dragY: 0,
@@ -57,19 +59,10 @@ export function initHeroBrand3D(): HeroBrand3D | null {
   };
 
   const redMaterials = [
-    new THREE.MeshStandardMaterial({ color: 0xc30012, roughness: 0.44, metalness: 0.64, envMapIntensity: 0.72 }),
-    new THREE.MeshStandardMaterial({ color: 0x87000f, roughness: 0.48, metalness: 0.60, envMapIntensity: 0.68 }),
-    new THREE.MeshStandardMaterial({ color: 0xa80010, roughness: 0.42, metalness: 0.66, envMapIntensity: 0.74 }),
+    new THREE.MeshStandardMaterial({ color: 0xd20b1d, roughness: 0.38, metalness: 0.52, envMapIntensity: 0.96 }),
+    new THREE.MeshStandardMaterial({ color: 0x9d0618, roughness: 0.42, metalness: 0.50, envMapIntensity: 0.90 }),
+    new THREE.MeshStandardMaterial({ color: 0xba071a, roughness: 0.36, metalness: 0.54, envMapIntensity: 0.98 }),
   ];
-  const wordMaterial = new THREE.MeshStandardMaterial({
-    color: 0x111111,
-    roughness: 0.22,
-    metalness: 0.92,
-    envMapIntensity: 0.9,
-    transparent: true,
-    opacity: 0,
-  });
-
   type Point2D = [number, number];
 
   function makePiece(points: Point2D[], material: THREE.MeshStandardMaterial, depth: number): THREE.Mesh {
@@ -192,129 +185,6 @@ export function initHeroBrand3D(): HeroBrand3D | null {
   });
   trianglePivot.position.set(0, 0.42, 0);
 
-  canvas.classList.remove('is-wordmark-ready');
-
-  const solidLetters: THREE.Mesh[] = [];
-  const particleLetters: THREE.InstancedMesh[] = [];
-  const tempMatrix = new THREE.Matrix4();
-  const tempPosition = new THREE.Vector3();
-  const tempScale = new THREE.Vector3();
-  const tempQuaternion = new THREE.Quaternion();
-
-  function buildWordmark(font: Font): void {
-    if (solidLetters.length || particleLetters.length) return;
-    const chars = 'ASANI'.split('');
-    const size = 0.66;
-    const depth = 0.16;
-    const spacing = 0.08;
-    let offsetX = 0;
-
-    chars.forEach((char, index) => {
-      let geometry: THREE.BufferGeometry = new TextGeometry(char, {
-        font,
-        size,
-        height: depth,
-        curveSegments: 10,
-        bevelEnabled: true,
-        bevelThickness: 0.012,
-        bevelSize: 0.01,
-        bevelSegments: 3,
-      });
-      geometry.computeBoundingBox();
-      const bounds = geometry.boundingBox!;
-      const width = bounds.max.x - bounds.min.x;
-      geometry.translate(-(bounds.min.x + width / 2), 0, -depth / 2);
-      if (geometry.index) geometry = geometry.toNonIndexed();
-      geometry.computeVertexNormals();
-
-      const basePosition = new THREE.Vector3(offsetX + width / 2, 0, 0);
-      const solidMesh = new THREE.Mesh(geometry.clone(), wordMaterial.clone() as THREE.MeshStandardMaterial);
-      solidMesh.userData.basePosition = basePosition.clone();
-      solidMesh.userData.index = index;
-      (solidMesh.material as THREE.MeshStandardMaterial).opacity = 0;
-      (solidMesh.material as THREE.MeshStandardMaterial).transparent = true;
-      solidMesh.renderOrder = 6;
-      (solidMesh.material as THREE.MeshStandardMaterial).depthWrite = false;
-      wordmarkGroup.add(solidMesh);
-      solidLetters.push(solidMesh);
-
-      const positionAttr = geometry.getAttribute('position');
-      const sampled: THREE.Vector3[] = [];
-      const step = Math.max(1, Math.floor(positionAttr.count / 145));
-      for (let i = 0; i < positionAttr.count; i += step) {
-        sampled.push(new THREE.Vector3(
-          positionAttr.getX(i),
-          positionAttr.getY(i),
-          positionAttr.getZ(i)
-        ));
-      }
-
-      const particleMaterial = new THREE.MeshStandardMaterial({
-        color: 0xefe7e2,
-        roughness: 0.2,
-        metalness: 0.62,
-        envMapIntensity: 0.68,
-        transparent: true,
-        opacity: 0,
-      });
-      const particles = new THREE.InstancedMesh(
-        new THREE.SphereGeometry(0.028, 8, 8),
-        particleMaterial,
-        sampled.length
-      );
-      particles.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-      particles.renderOrder = 4;
-      (particles.material as THREE.MeshStandardMaterial).depthWrite = false;
-      particles.userData.basePosition = basePosition.clone();
-      particles.userData.index = index;
-      particles.userData.targets = sampled;
-      particles.userData.starts = sampled.map((target, pointIndex) => {
-        const lane = pointIndex % 3;
-        const horizontalSign = target.x >= 0 ? 1 : -1;
-        const sideStartX = basePosition.x + horizontalSign * (2.2 + Math.random() * 2.4);
-        const sideStartY = basePosition.y + (Math.random() - 0.5) * 0.9;
-        const bottomStartX = basePosition.x + (Math.random() - 0.5) * 2.6;
-        const bottomStartY = basePosition.y - (1.8 + Math.random() * 1.9);
-        return new THREE.Vector3(
-          lane === 2 ? bottomStartX : sideStartX,
-          lane === 2 ? bottomStartY : sideStartY,
-          target.z + 1.2 + Math.random() * 1.2
-        );
-      });
-      particles.userData.jitter = sampled.map(() => Math.random() * 0.24);
-      wordmarkGroup.add(particles);
-      particleLetters.push(particles);
-      offsetX += width + spacing;
-    });
-
-    const centerOffset = offsetX / 2 - spacing / 2;
-    solidLetters.forEach((letter) => {
-      letter.userData.basePosition.x -= centerOffset;
-    });
-    particleLetters.forEach((letter) => {
-      letter.userData.basePosition.x -= centerOffset;
-      if (letter.userData.starts) {
-        (letter.userData.starts as THREE.Vector3[]).forEach((startPoint) => {
-          startPoint.x -= centerOffset;
-        });
-      }
-    });
-    wordmarkGroup.position.set(0, -1.56, 0);
-    canvas.classList.add('is-wordmark-ready');
-    applyAssembly();
-  }
-
-  const isDesktopBrand = window.innerWidth > 1024;
-  if (isDesktopBrand) {
-    const loader = new FontLoader();
-    loader.load(
-      '/assets/helvetiker_regular.typeface.json',
-      (font: Font) => buildWordmark(font),
-      undefined,
-      () => {}
-    );
-  }
-
   const hitPlane = new THREE.Mesh(
     new THREE.BoxGeometry(5.2, 5.2, 0.8),
     new THREE.MeshBasicMaterial({ visible: false })
@@ -348,48 +218,6 @@ export function initHeroBrand3D(): HeroBrand3D | null {
       (piece.material as THREE.MeshStandardMaterial).transparent = brandState.triangleOpacity < 0.999;
     });
 
-    particleLetters.forEach((letter) => {
-      const delay = letter.userData.index * 0.085;
-      const local = Math.max(0, Math.min(1, (t - delay) / 0.62));
-      const reveal = local * local * (3 - 2 * local);
-      letter.position.set(0, 0, 0);
-      letter.rotation.set(0, 0, 0);
-      letter.scale.setScalar(1);
-      const targets = letter.userData.targets as THREE.Vector3[];
-      const starts = letter.userData.starts as THREE.Vector3[];
-      const jitter = letter.userData.jitter as number[];
-
-      for (let i = 0; i < targets.length; i += 1) {
-        const pointDelay = delay + jitter[i];
-        const particleLocal = Math.max(0, Math.min(1, (t - pointDelay) / 0.5));
-        const particleReveal = particleLocal * particleLocal * (3 - 2 * particleLocal);
-        tempPosition.copy(starts[i]).lerp(targets[i], particleReveal);
-        const drift = (1 - particleReveal);
-        tempPosition.x += Math.sin((i * 1.7) + t * 11) * 0.024 * drift;
-        tempPosition.y += Math.cos((i * 1.3) + t * 9) * 0.024 * drift;
-        tempPosition.z += drift * 0.3;
-        const moleculeScale = 0.3 + particleReveal * 0.7;
-        tempScale.setScalar(moleculeScale);
-        tempMatrix.compose(tempPosition, tempQuaternion, tempScale);
-        letter.setMatrixAt(i, tempMatrix);
-      }
-      letter.instanceMatrix.needsUpdate = true;
-      const particleOpacity = Math.max(0, 1 - Math.max(0, t - 0.82) / 0.18);
-      (letter.material as THREE.MeshStandardMaterial).opacity =
-        Math.min(1, reveal * 1.2) * particleOpacity * brandState.wordmarkOpacity;
-    });
-
-    solidLetters.forEach((letter) => {
-      const delay = letter.userData.index * 0.085;
-      const local = Math.max(0, Math.min(1, (t - (delay + 0.28)) / 0.26));
-      const reveal = local * local * (3 - 2 * local);
-      const base = letter.userData.basePosition as THREE.Vector3;
-      letter.position.set(base.x, base.y + (1 - reveal) * 0.03, 0.06);
-      letter.rotation.set(0, 0, 0);
-      letter.scale.setScalar(0.985 + reveal * 0.015);
-      (letter.material as THREE.MeshStandardMaterial).opacity =
-        Math.min(1, reveal * 1.35) * brandState.wordmarkOpacity;
-    });
   }
 
   function setBrandState(next: Partial<typeof brandState>): void {
@@ -416,32 +244,24 @@ export function initHeroBrand3D(): HeroBrand3D | null {
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
       trianglePivot.scale.setScalar(0.42);
       trianglePivot.position.set(0, 2.62, 0);
-      wordmarkGroup.scale.setScalar(1);
-      wordmarkGroup.position.set(0, -0.8, 0);
     } else if (mobile) {
       camera.position.set(0, 0.0, 14.5);
       brandState.layoutScale = 0.62;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
       trianglePivot.scale.setScalar(0.42);
       trianglePivot.position.set(0, 2.62, 0);
-      wordmarkGroup.scale.setScalar(1);
-      wordmarkGroup.position.set(0, -0.9, 0);
     } else if (window.innerWidth <= 1024) {
       camera.position.set(0, 0.0, 14.8);
       brandState.layoutScale = 0.78;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
       trianglePivot.scale.setScalar(0.74);
       trianglePivot.position.set(0, 2.16, 0);
-      wordmarkGroup.scale.setScalar(1);
-      wordmarkGroup.position.set(0, -0.86, 0);
     } else {
       camera.position.set(0, 0, 16.5);
       brandState.layoutScale = 0.7;
       brandRoot.scale.setScalar(brandState.layoutScale * brandState.brandScale);
       trianglePivot.scale.setScalar(0.78);
-      wordmarkGroup.scale.setScalar(1.04);
       trianglePivot.position.set(0, 0.42, 0);
-      wordmarkGroup.position.set(0, -1.56, 0);
     }
     if (!canInteract()) {
       trianglePivot.rotation.x = -0.05;
@@ -495,7 +315,7 @@ export function initHeroBrand3D(): HeroBrand3D | null {
   );
   _brandObserver.observe(hero);
 
-  setBrandState({ assembly: 0, wordmarkOpacity: isDesktopBrand ? 1 : 0, triangleOpacity: 1 });
+  setBrandState({ assembly: 0, triangleOpacity: 1 });
 
   let _rafId = 0;
   (function tick() {
@@ -530,7 +350,6 @@ export function initHeroBrand3D(): HeroBrand3D | null {
   return {
     canvas,
     setAssembly(value: number) { setBrandState({ assembly: value }); },
-    setWordmarkOpacity(value: number) { setBrandState({ wordmarkOpacity: value }); },
     setTriangleOpacity(value: number) { setBrandState({ triangleOpacity: value }); },
     setBrandScale(value: number) { setBrandState({ brandScale: value }); },
   };

@@ -2,15 +2,11 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// ─── Module state ──────────────────────────────────────────────────────────────
-
 let lenis: Lenis | null = null;
 let scrollVelocity = 0;
 let resizeTimer = 0;
 let nativeScrollPatched = false;
 const coarsePointerQuery = window.matchMedia('(pointer: coarse)');
-
-// ─── Public getters ────────────────────────────────────────────────────────────
 
 export function getScrollVelocity(): number {
   return scrollVelocity;
@@ -20,11 +16,8 @@ export function getLenis(): Lenis | null {
   return lenis;
 }
 
-// ─── Init ──────────────────────────────────────────────────────────────────────
-
 export function initLenis(): void {
-  // Prevent ScrollTrigger from consuming excessive callbacks on fast scrub/pin.
-  // ignoreMobileResize stops unnecessary full refreshes on iOS toolbar hide/show.
+  // Evita refreshes caros do ScrollTrigger em scrubs rapidos e no resize do iOS.
   ScrollTrigger.config({
     limitCallbacks: true,
     ignoreMobileResize: true,
@@ -38,40 +31,32 @@ export function initLenis(): void {
     smoothTouch: false,
   } as any);
 
-  // Keep ScrollTrigger in sync with Lenis scroll position.
-  // Using the scroll event (not the RAF) avoids a one-frame lag on scrubbed pins.
+  // Mantem o ScrollTrigger sincronizado com a posicao real do Lenis.
   lenis.on('scroll', ScrollTrigger.update);
 
-  // Track velocity for ambient / cta-ambient WebGL effects.
+  // Velocidade usada pelos efeitos WebGL ambientes.
   lenis.on('scroll', (e: any) => {
     scrollVelocity = e.velocity ?? 0;
   });
 
   patchNativeScroll();
 
-  // Drive Lenis from GSAP's ticker so both share a single rAF loop.
-  // lagSmoothing(0) prevents GSAP from skipping frames during tab blur/focus,
-  // which would cause pinned sections to jump.
+  // Lenis e GSAP compartilham o mesmo ticker para evitar dessincronia visual.
   gsap.ticker.lagSmoothing(0);
   gsap.ticker.add((time: number) => {
     lenis!.raf(time * 1000);
   });
 
-  // ─── Resize handling ──────────────────────────────────────────────────────
-  // Debounce to avoid cascading recalculations during window drag / orientation
-  // change. 180 ms feels instant to users but batches most browser resize events.
+  // Debounce evita recalculos em cascata durante resize/orientacao.
   window.addEventListener('resize', handleResize, { passive: true });
 
-  // Orientation change fires a resize but the viewport dimensions are not yet
-  // updated at that moment on iOS — wait one frame before refreshing.
+  // No iOS, a orientacao dispara antes das dimensoes finais do viewport.
   window.addEventListener('orientationchange', () => {
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(forceRefresh);
     });
   }, { passive: true });
 }
-
-// ─── Resize helpers ────────────────────────────────────────────────────────────
 
 function handleResize(): void {
   if (coarsePointerQuery.matches) return;
@@ -80,8 +65,7 @@ function handleResize(): void {
 }
 
 function forceRefresh(): void {
-  // ScrollTrigger.refresh() recalculates all trigger bounds and re-pins.
-  // Must be called after the layout has settled (hence the debounce).
+  // Atualiza limites e pins depois que o layout estabiliza.
   ScrollTrigger.refresh(true);
 }
 

@@ -1,7 +1,5 @@
 @charset "UTF-8";
 :root {
-  --portal-bg: #09000a;
-  --portal-fog: #07000a;
   --accent: #840016;
   --accent-light: #a3001d;
   --accent-glow: rgba(132,0,22,0.30);
@@ -81,8 +79,6 @@
   --founders-bg: radial-gradient(720px 420px at 50% 0%, rgba(132,0,22,0.04), transparent 70%), var(--bg);
   --cta-bg: radial-gradient(620px 320px at 50% 18%, rgba(132,0,22,0.05), transparent 68%), var(--bg);
   --footer-bg: linear-gradient(180deg, rgba(132,0,22,0.028), transparent 24%), var(--bg-1);
-  --portal-bg: #211019;
-  --portal-fog: #2d1822;
   --drawer-bg:
     radial-gradient(520px 240px at 20% 0%, var(--signal-border), transparent 65%),
     linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
@@ -134,8 +130,6 @@
   --founders-bg: radial-gradient(760px 420px at 50% 0%, rgba(177,0,27,0.03), transparent 70%), linear-gradient(180deg, rgba(8,1,4,0.10), transparent 40%), var(--bg);
   --cta-bg: radial-gradient(720px 360px at 50% 18%, rgba(177,0,27,0.06), transparent 68%), linear-gradient(180deg, rgba(8,1,4,0.14), transparent 48%), var(--bg);
   --footer-bg: linear-gradient(180deg, rgba(177,0,27,0.035), rgba(8,1,4,0.08) 24%, transparent 52%), var(--bg-1);
-  --portal-bg: #090103;
-  --portal-fog: #100205;
   --drawer-bg:
     radial-gradient(520px 240px at 20% 0%, var(--signal-border), transparent 65%),
     linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
@@ -188,8 +182,6 @@
   --founders-bg: radial-gradient(760px 420px at 50% 0%, rgba(156,15,32,0.04), transparent 70%), linear-gradient(180deg, rgba(248,244,241,0.34), transparent 40%), var(--bg);
   --cta-bg: radial-gradient(720px 360px at 50% 18%, rgba(156,15,32,0.06), transparent 68%), linear-gradient(180deg, rgba(0,0,0,0.018), transparent 48%), var(--bg);
   --footer-bg: linear-gradient(180deg, rgba(156,15,32,0.03), rgba(0,0,0,0.012) 24%, transparent 52%), var(--bg-1);
-  --portal-bg: #e8dfd7;
-  --portal-fog: #d7ccc4;
   --drawer-bg:
     radial-gradient(520px 240px at 18% 0%, rgba(156,15,32,0.10), transparent 65%),
     linear-gradient(180deg, rgba(255,255,255,0.92), rgba(241,236,232,0.98)),

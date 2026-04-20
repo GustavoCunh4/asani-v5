@@ -33,8 +33,7 @@ export function initStatsSequence(): void {
     if (bgWord) gsap.set(bgWord, { xPercent: 5,  opacity: 0 });
   });
 
-  // Reveal the first stat as soon as the section scrolls into view —
-  // avoids a long blank period before the pin activates at 'top top'.
+  // Mostra a primeira metrica antes do pin para evitar uma area vazia longa.
   const firstItem  = items[0];
   const firstLeft  = firstItem.querySelector<HTMLElement>('.stat-left');
   const firstBg    = firstItem.querySelector<HTMLElement>('.stat-bg-word');
@@ -74,8 +73,7 @@ export function initStatsSequence(): void {
     const left   = item.querySelector<HTMLElement>('.stat-left');
     const bgWord = item.querySelector<HTMLElement>('.stat-bg-word');
 
-    // First item is already revealed by the early ScrollTrigger above;
-    // only add enter animations for subsequent items.
+    // A primeira metrica ja entrou; as demais animam conforme o scroll.
     if (i > 0) {
       tl.to(item, { opacity: 1, duration: 0.01 }, base);
 

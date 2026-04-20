@@ -23,7 +23,7 @@ export function initHeroGlobe(): void {
   const accentColor = new THREE.Color(accentHex);
   const R = 3.0;
 
-  // Build land mask via 2D canvas
+  // Mascara dos continentes gerada em canvas 2D.
   const MW = 512, MH = 256;
   const mc = document.createElement('canvas');
   mc.width = MW; mc.height = MH;

@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/* Solutions stack layout */
+/* Layout da pilha de solucoes. */
 .section-solutions {
   --solutions-desktop-stage-height: clamp(520px, 34vw, 610px);
   --solutions-desktop-card-width: min(540px, 40vw);
@@ -55,7 +55,7 @@
   overflow: visible !important;
 }
 
-/* Ambient shadow cast beneath the stack — reinforces physical depth */
+/* Sombra ambiente para reforcar a profundidade da pilha. */
 .section-solutions .solutions-stack-stage::after {
   content: '' !important;
   position: absolute !important;
@@ -98,9 +98,7 @@
   margin: 0 !important;
   transform-origin: center center !important;
   will-change: transform, opacity, filter;
-  /* GSAP drives transform/opacity/filter via inline styles.
-     CSS transition only covers box-shadow / border-color so the
-     active-card shadow enhancement animates in/out naturally. */
+  /* GSAP controla transform/opacity/filter; CSS anima apenas sombra e borda. */
   transition: box-shadow 0.32s ease, border-color 0.28s ease !important;
   background:
     linear-gradient(
@@ -114,7 +112,7 @@
     0 8px 18px rgba(0, 0, 0, 0.12) !important;
 }
 
-/* Active (front) card — stronger shadow confirms it's "above" the stack */
+/* Card ativo recebe sombra mais forte para parecer acima da pilha. */
 .section-solutions .sol-card.is-stack-active {
   box-shadow:
     0 48px 120px rgba(100, 8, 23, 0.34),
@@ -123,7 +121,7 @@
   border-color: rgba(200, 60, 80, 0.42) !important;
 }
 
-/* Suppress the left-edge accent line — too distracting on crimson cards */
+/* Remove a linha lateral para nao competir com o card vermelho. */
 .section-solutions .sol-card::before {
   display: none !important;
 }
@@ -180,7 +178,7 @@
   color: var(--deep) !important;
 }
 
-/* Hover only applies to the active (front) card — others have pointer-events: none */
+/* Estado hover aplicado apenas ao card ativo. */
 .section-solutions .sol-card.is-stack-active:hover .sol-card-inner h3,
 .section-solutions .sol-card.is-stack-active:hover .sol-card-inner p,
 .section-solutions .sol-card.is-stack-active:hover .sol-tags span {

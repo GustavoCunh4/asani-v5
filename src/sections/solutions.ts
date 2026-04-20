@@ -20,8 +20,6 @@ export function initSolutionsOrbit(): void {
   const nameBackdrop = section.querySelector<HTMLElement>('.solutions-name-bg');
   let currentBackdropName = '';
 
-  // ─── Utilities ────────────────────────────────────────────────────────────────
-
   function clamp(value: number, min: number, max: number): number {
     return Math.min(max, Math.max(min, value));
   }
@@ -30,21 +28,19 @@ export function initSolutionsOrbit(): void {
     return start + (end - start) * t;
   }
 
-  // Quartic ease-out: fast start, decelerates smoothly. Used for the lift phase —
-  // card flicks upward quickly then floats to the apex.
+  // Saida rapida e desacelerada para a fase em que o card sobe.
   function easeLift(t: number): number {
     const c = clamp(t, 0, 1);
     return 1 - Math.pow(1 - c, 4);
   }
 
-  // Quadratic ease-in: starts slow, accelerates. Used for the land phase —
-  // card hovers briefly at peak then gravity pulls it behind the stack.
+  // Entrada acelerada para a fase em que o card volta para a pilha.
   function easeLand(t: number): number {
     const c = clamp(t, 0, 1);
     return c * c;
   }
 
-  // Cubic ease-out: used for following-cards shift animation.
+  // Deslocamento suave dos cards que acompanham a transicao.
   function easeSlide(t: number): number {
     const c = clamp(t, 0, 1);
     return 1 - Math.pow(1 - c, 3);
@@ -66,8 +62,6 @@ export function initSolutionsOrbit(): void {
     });
   }
 
-  // ─── Pose types ───────────────────────────────────────────────────────────────
-
   interface Pose {
     x: number; y: number; z: number;
     rx: number; ry: number; rz: number;
@@ -80,9 +74,7 @@ export function initSolutionsOrbit(): void {
     liftRz: number; liftRy: number;
   }
 
-  // ─── Stack slot definitions ───────────────────────────────────────────────────
-  // Each slot describes the resting position of a card at that depth in the stack.
-  // Irregular x/rz values give the organic, non-mechanical feel of real cards.
+  // Slots de repouso dos cards em cada profundidade da pilha.
 
   function getStackSlots(): Pose[] {
     const w = window.innerWidth;
@@ -110,8 +102,7 @@ export function initSolutionsOrbit(): void {
     ];
   }
 
-  // The lifted pose: card is in "air" — dominant, vivid, forward, slightly tilted.
-  // Scale > 1 and full opacity make it feel physically present above the stack.
+  // Pose do card ativo quando ele sobe acima da pilha.
   function getLiftConfig(): LiftConfig {
     const w = window.innerWidth;
     if (w <= 480) return { liftY: -148, liftZ:  94, liftRz:  8.0, liftRy: -10 };
@@ -121,21 +112,19 @@ export function initSolutionsOrbit(): void {
 
   function getLiftedPose(cfg: LiftConfig): Pose {
     return {
-      x: 0,           // centered while airborne
-      y: cfg.liftY,   // high above the stack
-      z: cfg.liftZ,   // pushed forward toward the viewer
-      rx: -8,         // slight forward tilt — card face visible, like held in a hand
-      ry: cfg.liftRy, // yaw — feels gripped and turned
-      rz: cfg.liftRz, // natural roll, as if picked up at an angle
-      scale: 1.04,    // slightly larger — it's closest to the viewer
-      opacity: 0.97,  // near-full — prominent, in focus
-      blur: 0,        // crisp at apex
-      saturate: 1.12, // vivid — card is "lit"
-      brighten: 1.08, // brighter — emphasises the active card
+      x: 0,
+      y: cfg.liftY,
+      z: cfg.liftZ,
+      rx: -8,
+      ry: cfg.liftRy,
+      rz: cfg.liftRz,
+      scale: 1.04,
+      opacity: 0.97,
+      blur: 0,
+      saturate: 1.12,
+      brighten: 1.08,
     };
   }
-
-  // ─── Interpolation ────────────────────────────────────────────────────────────
 
   function mixPose(a: Pose, b: Pose, t: number): Pose {
     return {
@@ -147,10 +136,7 @@ export function initSolutionsOrbit(): void {
     };
   }
 
-  // Two-phase arc for the outgoing (front) card:
-  //   Phase 1 — Lift    (0 → LIFT_END): card rises quickly to apex with ease-out.
-  //   Phase 2 — Settle  (LIFT_END → 1): gravity pulls it behind the stack with ease-in.
-  // Asymmetric split (35/65) makes the lift feel nimble and the settle feel deliberate.
+  // Arco em duas fases: subida rapida e retorno controlado para tras da pilha.
   const LIFT_END = 0.35;
 
   function arcPose(fromPose: Pose, liftPose: Pose, toPose: Pose, amount: number): Pose {
@@ -160,13 +146,9 @@ export function initSolutionsOrbit(): void {
     return mixPose(liftPose, toPose, easeLand((amount - LIFT_END) / (1 - LIFT_END)));
   }
 
-  // ─── Ordering ─────────────────────────────────────────────────────────────────
-
   function getOrderForIndex(index: number): HTMLElement[] {
     return cards.slice(index).concat(cards.slice(0, index));
   }
-
-  // ─── Render ───────────────────────────────────────────────────────────────────
 
   function render(index: number, progress: number): void {
     const slots = getStackSlots();
@@ -174,7 +156,7 @@ export function initSolutionsOrbit(): void {
     const baseIndex = clamp(index, 0, cards.length - 1);
     const order = getOrderForIndex(baseIndex);
 
-    // Reduced-motion: snap without interpolation.
+    // Em movimento reduzido, troca de estado sem interpolacao.
     const snapProgress = progress >= 0.5 ? 1 : 0;
     const effectiveProgress = reduceMotionQuery.matches ? snapProgress : progress;
     const slidedProgress = reduceMotionQuery.matches ? snapProgress : easeSlide(progress);
@@ -184,7 +166,7 @@ export function initSolutionsOrbit(): void {
       : clamp(baseIndex + 1, 0, cards.length - 1);
 
     const liftPose = getLiftedPose(cfg);
-    const backSlot = slots[slots.length - 1]; // last slot is the destination for the outgoing card
+    const backSlot = slots[slots.length - 1];
 
     cards.forEach((card) => {
       const slotIndex = order.indexOf(card);
@@ -193,10 +175,10 @@ export function initSolutionsOrbit(): void {
 
       if (baseIndex < cards.length - 1 && progress > 0) {
         if (card === cards[baseIndex]) {
-          // Outgoing front card: lift arc → behind stack
+          // Card da frente sobe e volta para tras da pilha.
           pose = arcPose(restPose, liftPose, backSlot, effectiveProgress);
         } else if (slotIndex > 0) {
-          // Cards behind: each slides one slot forward as the front card departs
+          // Os cards de tras avancam um slot.
           const nextSlot = slots[Math.min(slotIndex - 1, slots.length - 1)];
           pose = mixPose(restPose, nextSlot, slidedProgress);
         }
@@ -218,8 +200,6 @@ export function initSolutionsOrbit(): void {
     updateNameBackdrop(cards[visibleIndex]?.querySelector('h3')?.textContent || '');
   }
 
-  // ─── State ────────────────────────────────────────────────────────────────────
-
   function setState(index: number, progress: number): void {
     activeIndex = clamp(index, 0, cards.length - 1);
     activeProgress = clamp(progress, 0, 1);
@@ -237,9 +217,7 @@ export function initSolutionsOrbit(): void {
 
   setState(0, 0);
 
-  // ─── ScrollTrigger ────────────────────────────────────────────────────────────
-  // Section stays pinned for (cards.length - 1) card transitions, then releases.
-  // viewportFactor tunes how much scroll travel each card transition consumes.
+  // A secao fica presa enquanto os cards fazem as transicoes principais.
 
   const scrollDistance = (): number => {
     const w = window.innerWidth;

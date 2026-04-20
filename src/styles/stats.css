@@ -1,22 +1,21 @@
 @charset "UTF-8";
 /* ==========================================================
-   STATS EDITORIAL SEQUENCE — #sobre (section-numbers)
-   One metric at a time, pinned scroll, cinematic typography
+   SEQUENCIA EDITORIAL DE METRICAS
    ========================================================== */
 
-/* Stage: viewport-height container, GSAP pins this */
+/* Area presa pelo GSAP durante a sequencia. */
 .stats-stage {
   position: relative;
   width: 100%;
   height: 100vh;
-  /* Mobile usa svh para descontar a barra do browser */
+  /* Mobile usa svh para descontar a barra do browser. */
   height: 100svh;
   overflow: hidden;
   background: var(--bg-alt);
   z-index: 1;
 }
 
-/* Each metric: full-bleed, two-column grid */
+/* Cada metrica ocupa a tela inteira em duas colunas. */
 .stat-item {
   position: absolute;
   inset: 0;
@@ -27,7 +26,7 @@
   overflow: hidden;
 }
 
-/* ---- Left column: dots + number + label ---- */
+/* Coluna esquerda: pontos, numero e legenda. */
 .stat-left {
   display: flex;
   flex-direction: column;
@@ -35,7 +34,7 @@
   padding: 0 clamp(48px, 8vw, 120px);
 }
 
-/* Progress dots — 4 circles, active one filled */
+/* Pontos de progresso da metrica ativa. */
 .stat-dots {
   display: flex;
   align-items: center;
@@ -60,7 +59,7 @@
   transform: scale(1.28);
 }
 
-/* Dominant number */
+/* Numero principal. */
 .stat-number {
   font-family: var(--display);
   font-size: clamp(5rem, 14vw, 16rem);
@@ -72,7 +71,7 @@
   margin-bottom: 0;
 }
 
-/* Unit/suffix tied directly to number, accent-coloured */
+/* Sufixo do numero com cor de acento. */
 .stat-unit,
 .stat-sup {
   color: var(--accent);
@@ -82,14 +81,14 @@
   font-weight: 600;
 }
 
-/* Thin accent rule between number and label */
+/* Linha fina entre numero e legenda. */
 .stat-number + .stat-label {
   margin-top: clamp(14px, 2.2vh, 26px);
   padding-top: clamp(14px, 2.2vh, 26px);
   border-top: 1px solid var(--border);
 }
 
-/* Descriptor label */
+/* Legenda descritiva. */
 .stat-label {
   font-family: var(--sans);
   font-size: clamp(1rem, 1.6vw, 1.35rem);
@@ -100,8 +99,8 @@
   max-width: 28ch;
 }
 
-/* ---- Right column: ghost editorial word ---- */
-/* Alinha pelo início da coluna → overflow clipa pela direita, nunca pela esquerda */
+/* Palavra editorial na coluna direita. */
+/* O overflow recorta pela direita, sem cortar o inicio da palavra. */
 .stat-right {
   display: flex;
   align-items: center;
@@ -126,12 +125,12 @@
   transform: translateY(4%);
 }
 
-/* Override old chapter padding rule */
+/* A secao de numeros controla o proprio espacamento interno. */
 .chapter.section-numbers {
   padding: 0;
 }
 
-/* ---- Tablet ---- */
+/* Tablet. */
 @media (max-width: 1024px) {
   .stat-left {
     padding: 0 clamp(36px, 6vw, 72px);
@@ -150,23 +149,21 @@
   }
 }
 
-/* ---- Mobile: coluna única ---- */
+/* Mobile: coluna unica. */
 @media (max-width: 768px) {
   .stat-item {
     grid-template-columns: 1fr;
   }
 
-  /* Conteúdo centralizado verticalmente com padding interno —
-     sem depender da altura do stage para criar espaçamento */
+  /* Conteudo centralizado sem depender da altura do stage. */
   .stat-left {
     position: relative;
     z-index: 2;
-    /* Padding vertical move conteúdo do centro — sem espaço morto */
     padding: clamp(36px, 5vh, 56px) clamp(28px, 6vw, 44px);
     justify-content: center;
   }
 
-  /* Palavra no canto inferior direito como textura */
+  /* Palavra no canto inferior direito como textura. */
   .stat-right {
     position: absolute;
     right: 0;

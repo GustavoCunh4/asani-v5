@@ -88,12 +88,12 @@ section{scroll-margin-top:calc(var(--nav-h) + 18px);}
 .sec-title em{font-style:italic;color:var(--fg-2);}
 
 /* ==========================================================
-   PREMIUM ANIMATION LAYER
-   Progress bar · Hero clip reveal · Section nav dots
+   CAMADA DE ANIMACAO
+   Barra de progresso, reveal do hero e estados de movimento reduzido.
 ========================================================== */
 
 /* ----------------------------------------------------------
-   SCROLL PROGRESS BAR
+   BARRA DE PROGRESSO
 ---------------------------------------------------------- */
 #page-progress {
   position: fixed;
@@ -110,8 +110,7 @@ section{scroll-margin-top:calc(var(--nav-h) + 18px);}
 }
 
 /* ----------------------------------------------------------
-   HERO TEXT CLIP WRAPPER
-   overflow:hidden mask enables line-rise curtain reveal
+   RECORTE DO TEXTO DO HERO
 ---------------------------------------------------------- */
 .h1-clip {
   display: block;
@@ -127,7 +126,7 @@ section{scroll-margin-top:calc(var(--nav-h) + 18px);}
 
 
 /* ----------------------------------------------------------
-   LENIS: disable native smooth scroll (handled by Lenis)
+   LENIS: scroll suave controlado por JS
 ---------------------------------------------------------- */
 html.lenis { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -137,8 +136,7 @@ html.lenis { height: auto; }
 
 
 /* ----------------------------------------------------------
-   LINE CLIP REVEAL — manifesto / editorial headings
-   .ln-clip = overflow:hidden mask; .ln-inner = animated line
+   REVEAL DE LINHAS
 ---------------------------------------------------------- */
 .ln-clip {
   display: block;
@@ -152,7 +150,7 @@ html.lenis { height: auto; }
 }
 
 /* ----------------------------------------------------------
-   CARD TILT — 3D preserve-3d context for sol cards
+   CONTEXTO 3D DOS CARDS
 ---------------------------------------------------------- */
 .sol-card {
   transform-style: preserve-3d;
@@ -160,7 +158,7 @@ html.lenis { height: auto; }
 }
 
 /* ----------------------------------------------------------
-   REDUCED MOTION fallbacks
+   FALLBACKS PARA MOVIMENTO REDUZIDO
 ---------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   #page-progress { transition: none !important; }

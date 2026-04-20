@@ -1,7 +1,3 @@
-/**
- * Asani v5 — main entry point
- * Orchestrates all init modules in the correct dependency order.
- */
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -28,8 +24,6 @@ import { initManifestoLineReveal, initManifestoTakeover } from './sections/manif
 import { initStatsSequence } from './sections/stats';
 import { initSolutionsOrbit } from './sections/solutions';
 
-// ─── Immediate setup (synchronous, before any DOMContentLoaded) ───────────────
-
 const root = document.documentElement;
 root.classList.add('hero-booting');
 const shouldUseMobilePerformanceMode = window.matchMedia('(max-width: 1024px), (pointer: coarse)').matches;
@@ -44,17 +38,14 @@ function resetScrollPosition(): void {
 
 resetScrollPosition();
 
-// ─── Nav + drawer run regardless of motion preference ─────────────────────────
 initNav();
 initDrawer();
-initHeroTypewriter(); // internally guards against prefers-reduced-motion
+initHeroTypewriter();
 
-// ─── Reduced motion: just remove booting state and exit ───────────────────────
 if (isReduced) {
   root.classList.remove('hero-booting');
   root.classList.add('js-ready');
 } else {
-  // ─── Full animation boot ─────────────────────────────────────────────────────
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.config({
     limitCallbacks: true,
@@ -65,18 +56,15 @@ if (isReduced) {
     initLenis();
   }
 
-  // Hero — Three.js scenes must initialize before intro timeline reads their state
   const heroBrand3D = initHeroBrand3D();
   if (!shouldUseMobilePerformanceMode) {
     initHeroGlobe();
   }
   initHeroAmbient();
 
-  // Hero intro uses heroBrand3D handle and lenis for anchor scrolling
   initHeroIntro(heroBrand3D, getLenis);
   initHeroDepth();
 
-  // Section animations
   initManifestoLineReveal();
   initRevealClasses();
   initScrollAnimations();
@@ -92,7 +80,7 @@ if (isReduced) {
   initTechField();
   initTechTriangle();
 
-  // Stop smooth scroll if user enables reduced motion mid-session
+  // Interrompe o smooth scroll se o usuario ativar reducao de movimento.
   bindMediaChange(reduceMotionQuery, (e) => {
     if (!e.matches) return;
     getLenis()?.stop();

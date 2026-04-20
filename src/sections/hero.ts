@@ -63,7 +63,7 @@ export function initHeroIntro(
     return;
   }
 
-  // Wrap each line in clip container for yPercent reveal
+  // Cada linha recebe um container para o reveal vertical.
   blocks.forEach((block) => {
     if (block.parentElement?.classList.contains('h1-clip')) return;
     const clip = document.createElement('div');
@@ -90,7 +90,6 @@ export function initHeroIntro(
 
   if (heroBrand3D) {
     heroBrand3D.setAssembly(0);
-    heroBrand3D.setWordmarkOpacity(isMobileBoot ? 0 : 1);
     heroBrand3D.setTriangleOpacity(1);
     heroBrand3D.setBrandScale(1);
   }
@@ -118,7 +117,6 @@ export function initHeroIntro(
       ease: 'expo.out',
     }, 0.02);
   }
-
   if (heroBrand3D) {
     const assemblyState = { progress: 0 };
     introTl.to(assemblyState, {
@@ -136,7 +134,7 @@ export function initHeroIntro(
   const spacer = document.getElementById('hero-scroll-space');
   if (!spacer) { initHeroReveal(); return; }
 
-  // Mobile / Tablet (≤1024px)
+  // Mobile e tablet.
   if (window.innerWidth <= 1024) {
     spacer.style.height = '120vh';
 
@@ -170,7 +168,7 @@ export function initHeroIntro(
     return;
   }
 
-  // Desktop (>1024px)
+  // Desktop.
   spacer.style.height = '200vh';
 
   const tl = gsap.timeline({
@@ -207,7 +205,6 @@ export function initHeroIntro(
       duration: 0.9,
     }, 0.18);
   }
-
   if (heroBrand3D) {
     const brandFadeState = { progress: 0 };
     tl.to(brandFadeState, {
@@ -216,7 +213,6 @@ export function initHeroIntro(
       ease: 'power2.inOut',
       onUpdate() {
         const progress = brandFadeState.progress;
-        heroBrand3D!.setWordmarkOpacity(1 - progress * 0.78);
         heroBrand3D!.setTriangleOpacity(1 - progress * 0.32);
         heroBrand3D!.setBrandScale(1 - progress * 0.08);
       },

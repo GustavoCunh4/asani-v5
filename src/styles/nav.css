@@ -5,7 +5,7 @@
   transition:background 0.3s ease,border-color 0.3s ease,height 0.3s var(--ease),transform 0.35s var(--ease),opacity 0.5s ease;
   border-bottom:1px solid transparent;
 }
-/* Nav invisível no topo — aparece ao scrollar */
+/* Nav invisivel no topo, aparece ao scrollar. */
 #nav:not(.nav-solid){opacity:0;pointer-events:none;}
 #nav.nav-solid{background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom-color:var(--nav-solid-border);height:70px;}
 .nav-wrap{max-width:var(--container);margin:0 auto;padding:0 48px;width:100%;height:100%;display:flex;align-items:center;gap:clamp(20px,3vw,48px);}
@@ -40,7 +40,7 @@
   border-radius:999px;
   transform-origin:center;
 }
-/* Closing stagger: bot primeiro → mid → top (delays no estado base) */
+/* Fechamento escalonado das linhas do botao. */
 .nav-toggle-line--top{
   width:20px;
   transform:translate(-50%,-6.5px);
@@ -56,7 +56,7 @@
   transform:translate(-50%,6.5px);
   transition:transform 0.44s cubic-bezier(0.22,1,0.36,1) 0s,background 0.24s;
 }
-/* Opening: simultâneo (sem delay), bot com leve atraso para "fechar" o X */
+/* Abertura simultanea com leve atraso para fechar o X. */
 .nav-toggle.open .nav-toggle-line--top{
   transform:translate(-50%,0) rotate(45deg);
   background:var(--red);
@@ -72,7 +72,7 @@
   background:var(--red);
   transition:transform 0.44s cubic-bezier(0.22,1,0.36,1) 0.05s,background 0.2s 0.05s;
 }
-/* -- MOBILE DRAWER -- */
+/* Drawer mobile. */
 .drawer{
   position:fixed;top:0;right:0;bottom:0;z-index:1000;
   width:min(382px,100vw);
@@ -105,7 +105,7 @@
 .drawer.open .drawer-link:nth-child(5){transition-delay:0.34s;}
 .drawer.open .drawer-cta{transition-delay:0.40s;}
 .drawer.open .drawer-footer{transition-delay:0.46s;}
-/* Overlay behind drawer */
+/* Overlay interno do drawer fica desativado; o backdrop real e separado. */
 .drawer::before{
   display:none;
 }
@@ -257,7 +257,7 @@
 }
 
 /* ----------------------------------------------------------
-   NAV — underline reveal on hover + active state
+   NAV: underline no hover e no item ativo
 ---------------------------------------------------------- */
 .nav-links a {
   position: relative;
@@ -281,6 +281,3 @@
 .nav-links a.nav-active {
   color: var(--fg) !important;
 }
-
-/* Nav entrance — hidden until JS reveals it after portal */
-/* nav-hidden desativado — header sempre visível */

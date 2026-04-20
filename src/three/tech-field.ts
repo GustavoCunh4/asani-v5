@@ -1,28 +1,6 @@
-/**
- * Tech Field — 2D Canvas visual system for the infrastructure section.
- *
- * Layers (bottom → top):
- *   1. Dark background fill
- *   2. Grid lines — regular grid that distorts (repels) near the mouse cursor
- *   3. Connection lines — between nearby badges
- *   4. Badge particles — tech-themed circular elements that float from the edges,
- *      accelerate toward the triangle attractor, and dissolve on contact
- *   5. Absorption pulses — brief expanding rings when a badge is consumed
- *
- * Badge types represent: DATA · API · AI · CLOUD · SECURITY · COMPUTE · INTEGRATION · ML
- * Each is a pre-baked OffscreenCanvas sprite (circle + icon + label).
- *
- * Performance:
- *   - Sprites pre-rendered at startup, drawn via drawImage() each frame.
- *   - Grid distortion sampled only within mouse influence radius.
- *   - Badge count capped per viewport width.
- *   - Mouse interaction disabled on touch devices.
- *   - rAF paused via IntersectionObserver when section is off-screen.
- */
-
 import { isTouch } from '../core/media';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// Tipos usados pela animacao de badges da secao tecnica.
 
 interface Vec2 { x: number; y: number }
 
@@ -34,16 +12,15 @@ interface BadgeSpec {
 interface BadgeParticle {
   x: number; y: number;
   vx: number; vy: number;
-  // sprite rendered size (half-width/height = r)
+  // Tamanho renderizado do sprite: metade da largura/altura.
   r: number;
   opacity: number;
   targetOpacity: number;
   specIndex: number;
   depth: number;
-  phase: 0 | 1 | 2 | 3;  // spawning | drifting | attracted | dissolving
+  phase: 0 | 1 | 2 | 3; // nascendo | flutuando | atraido | dissolvendo
   phaseT: number;
   driftVx: number; driftVy: number;
-  rot: number;   // unused for badges but kept for future use
 }
 
 interface Pulse {
@@ -52,12 +29,11 @@ interface Pulse {
   opacity: number;
 }
 
-// ─── Badge icon drawing routines ──────────────────────────────────────────────
-// Each function draws centered at (0,0) fitting within ±r.
-// ctx strokeStyle/fillStyle are set to white before the call.
+// Cada icone e desenhado centralizado em (0, 0), cabendo no raio informado.
+// As cores do contexto sao definidas antes de chamar estas funcoes.
 
 function iconData(ctx: CanvasRenderingContext2D, r: number): void {
-  // Three horizontal ellipses — database cylinders
+  // Cilindros de banco de dados.
   const rw = r * 0.64, rh = r * 0.16;
   for (const dy of [-r * 0.36, 0, r * 0.36]) {
     ctx.beginPath(); ctx.ellipse(0, dy, rw, rh, 0, 0, Math.PI * 2); ctx.stroke();
@@ -69,7 +45,7 @@ function iconData(ctx: CanvasRenderingContext2D, r: number): void {
 }
 
 function iconApi(ctx: CanvasRenderingContext2D, r: number): void {
-  // Code brackets: < / >
+  // Colchetes de codigo: < / >.
   const bx = r * 0.44, by = r * 0.44, arm = r * 0.24;
   ctx.beginPath();
   ctx.moveTo(-bx + arm, -by); ctx.lineTo(-bx, -by * 0.5);
@@ -85,7 +61,7 @@ function iconApi(ctx: CanvasRenderingContext2D, r: number): void {
 }
 
 function iconAI(ctx: CanvasRenderingContext2D, r: number): void {
-  // Neural network: 3 inputs → 2 hidden → 1 output
+  // Rede neural: 3 entradas, 2 nos intermediarios e 1 saida.
   const inputs: [number, number][] = [[-r * 0.56, -r * 0.38], [-r * 0.56, 0], [-r * 0.56, r * 0.38]];
   const hidden: [number, number][] = [[0, -r * 0.22], [0, r * 0.22]];
   const out: [number, number] = [r * 0.56, 0];
@@ -108,11 +84,11 @@ function iconAI(ctx: CanvasRenderingContext2D, r: number): void {
 }
 
 function iconCloud(ctx: CanvasRenderingContext2D, r: number): void {
-  // Simplified cloud: arc with three bumps on top
+  // Nuvem simplificada com tres arcos superiores.
   const by = r * 0.18;
   ctx.beginPath();
-  ctx.arc(-r * 0.24, -by, r * 0.28, Math.PI, 0, false);   // left bump
-  ctx.arc(r * 0.12, -by - r * 0.14, r * 0.22, Math.PI, 0, false);  // right bump
+  ctx.arc(-r * 0.24, -by, r * 0.28, Math.PI, 0, false);
+  ctx.arc(r * 0.12, -by - r * 0.14, r * 0.22, Math.PI, 0, false);
   ctx.arc(r * 0.42, by - r * 0.06, r * 0.18, -Math.PI / 2, Math.PI / 3, false);
   ctx.lineTo(r * 0.5, by + r * 0.1);
   ctx.arc(0, by + r * 0.1, r * 0.50, 0, Math.PI, false);
@@ -121,12 +97,11 @@ function iconCloud(ctx: CanvasRenderingContext2D, r: number): void {
 }
 
 function iconLock(ctx: CanvasRenderingContext2D, r: number): void {
-  // Padlock: rounded rectangle body + semicircle shackle
+  // Cadeado com corpo arredondado e haste semicircular.
   const bw = r * 0.56, bh = r * 0.44, by = r * 0.14;
   ctx.beginPath();
   ctx.roundRect(-bw / 2, by - bh / 2, bw, bh, r * 0.1);
   ctx.stroke();
-  // Shackle
   const sw = bw * 0.28, sTop = by - bh / 2 - r * 0.2;
   ctx.beginPath();
   ctx.moveTo(-sw, by - bh / 2);
@@ -134,12 +109,11 @@ function iconLock(ctx: CanvasRenderingContext2D, r: number): void {
   ctx.arc(0, sTop, sw, Math.PI, 0);
   ctx.lineTo(sw, by - bh / 2);
   ctx.stroke();
-  // Keyhole dot
   ctx.beginPath(); ctx.arc(0, by, r * 0.1, 0, Math.PI * 2); ctx.fill();
 }
 
 function iconChip(ctx: CanvasRenderingContext2D, r: number): void {
-  // CPU die: outer square + inner square + pins on four sides
+  // Chip com nucleo interno e pinos nas quatro laterais.
   const s = r * 0.48;
   ctx.strokeRect(-s, -s, s * 2, s * 2);
   ctx.strokeRect(-s * 0.5, -s * 0.5, s, s);
@@ -153,11 +127,10 @@ function iconChip(ctx: CanvasRenderingContext2D, r: number): void {
 }
 
 function iconIntegration(ctx: CanvasRenderingContext2D, r: number): void {
-  // Two circles connected by a line with arrows at midpoint
+  // Dois pontos conectados por uma linha central.
   const cx = r * 0.46;
   ctx.beginPath(); ctx.arc(-cx, 0, r * 0.28, 0, Math.PI * 2); ctx.stroke();
   ctx.beginPath(); ctx.arc( cx, 0, r * 0.28, 0, Math.PI * 2); ctx.stroke();
-  // Connecting line with small perpendicular ticks (API endpoint markers)
   ctx.beginPath();
   ctx.moveTo(-cx + r * 0.28, 0); ctx.lineTo(cx - r * 0.28, 0);
   ctx.stroke();
@@ -167,7 +140,7 @@ function iconIntegration(ctx: CanvasRenderingContext2D, r: number): void {
 }
 
 function iconML(ctx: CanvasRenderingContext2D, r: number): void {
-  // Two overlapping lobes (brain/ML) + center divider
+  // Dois lobos sobrepostos para representar modelo/IA.
   const ox = r * 0.24, oy = r * 0.08, lr = r * 0.34;
   ctx.beginPath(); ctx.arc(-ox, -oy, lr, 0, Math.PI * 2); ctx.stroke();
   ctx.beginPath(); ctx.arc( ox, -oy, lr, 0, Math.PI * 2); ctx.stroke();
@@ -176,8 +149,6 @@ function iconML(ctx: CanvasRenderingContext2D, r: number): void {
   ctx.lineTo(0,  oy + r * 0.28);
   ctx.stroke();
 }
-
-// ─── Badge catalogue ──────────────────────────────────────────────────────────
 
 const BADGE_SPECS: BadgeSpec[] = [
   { label: 'Dados', draw: iconData        },
@@ -190,8 +161,7 @@ const BADGE_SPECS: BadgeSpec[] = [
   { label: 'Automação', draw: iconML      },
 ];
 
-// ─── Pre-baked sprite generation ──────────────────────────────────────────────
-// Sprites are rendered once at SPRITE_SIZE and drawn via drawImage() each frame.
+// Sprites sao gerados uma vez e reutilizados em cada frame.
 
 const SPRITE_SIZE = 156;
 const LABEL_PAD   = 30;
@@ -246,15 +216,13 @@ function bakeSprite(spec: BadgeSpec, size: number): SpriteCanvas {
   return oc;
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const ATTR_FRAC  = 0.11;    // absorption radius as fraction of min(w,h)
-const INF_FRAC   = 0.56;    // influence radius — badges start curving here
-const CONN_DIST  = 150;     // px — max distance for connection lines
+const ATTR_FRAC  = 0.11;    // raio de absorcao relativo ao menor lado
+const INF_FRAC   = 0.56;    // raio de influencia para curvar os badges
+const CONN_DIST  = 150;     // distancia maxima das linhas de conexao
 const GRID_COLS  = 22;
 const GRID_ROWS  = 14;
 const GRID_SAMP  = 50;
-const DIST_RAD   = 0.18;    // mouse distortion radius as fraction of min(w,h)
+const DIST_RAD   = 0.18;    // raio de distorcao do mouse
 const DIST_AMP   = 34;
 
 function badgeCount(cw: number): number {
@@ -262,8 +230,6 @@ function badgeCount(cw: number): number {
   if (cw <= 1024) return 26;
   return 38;
 }
-
-// ─── Public init ──────────────────────────────────────────────────────────────
 
 export function initTechField(): void {
   const canvas = document.getElementById('techField') as HTMLCanvasElement | null;
@@ -279,16 +245,14 @@ export function initTechField(): void {
   const mouseSmooth: Vec2 = { x: 0.5, y: 0.5 };
   let mousePulse = 0;
 
-  // Attractor is at the center of the section — aligned with the triangle canvas
+  // Atrator alinhado ao triangulo central da secao.
   const attractor: Vec2 = { x: 0.5, y: 0.50 };
 
   const badges:  BadgeParticle[] = [];
   const pulses:  Pulse[]         = [];
 
-  // Pre-baked sprites (one per spec, created once on init)
+  // Um sprite por badge, criado uma vez na inicializacao.
   const sprites: SpriteCanvas[] = BADGE_SPECS.map(s => bakeSprite(s, SPRITE_SIZE));
-
-  // ─── Helpers ───────────────────────────────────────────────────────────────
 
   function rnd(lo: number, hi: number): number { return lo + Math.random() * (hi - lo); }
 
@@ -299,8 +263,6 @@ export function initTechField(): void {
     if (side === 2) return { x: Math.random() * w, y: h + 40 };
     return { x: -40, y: Math.random() * h };
   }
-
-  // ─── Badge lifecycle ───────────────────────────────────────────────────────
 
   function makeBadge(fromEdge: boolean): BadgeParticle {
     const depth = rnd(0.30, 1);
@@ -323,7 +285,6 @@ export function initTechField(): void {
       phaseT: fromEdge ? 0 : Math.random(),
       driftVx: dirX * spd,
       driftVy: dirY * spd,
-      rot: 0,
     };
   }
 
@@ -351,8 +312,6 @@ export function initTechField(): void {
     for (let i = 0; i < count; i++) badges.push(makeBadge(true));
   }
 
-  // ─── Update ────────────────────────────────────────────────────────────────
-
   function update(dt: number): void {
     const ax   = attractor.x * w;
     const ay   = attractor.y * h;
@@ -366,7 +325,7 @@ export function initTechField(): void {
 
       switch (b.phase) {
         case 0: {
-          // Spawning — fade in while drifting gently
+          // Nasce com fade-in e movimento leve.
           b.phaseT = Math.min(1, b.phaseT + dt * 3.5);
           b.opacity = b.phaseT * b.targetOpacity * 0.72;
           b.x += b.driftVx * dt * 190;
@@ -375,19 +334,19 @@ export function initTechField(): void {
           break;
         }
         case 1: {
-          // Drifting — natural ambient float
+          // Flutua naturalmente ate entrar no raio de influencia.
           b.opacity += (b.targetOpacity - b.opacity) * Math.min(1, dt * 5);
           b.vx += (b.driftVx - b.vx) * Math.min(1, dt * 8);
           b.vy += (b.driftVy - b.vy) * Math.min(1, dt * 8);
           b.x += b.vx * dt * 180;
           b.y += b.vy * dt * 180;
           if (dist < infR) { b.phase = 2; b.phaseT = 0; }
-          // Out of bounds → reset
+          // Fora da tela, volta para uma borda.
           if (b.x < -80 || b.x > w + 80 || b.y < -80 || b.y > h + 80) resetBadge(b);
           break;
         }
         case 2: {
-          // Attracted — curves toward the triangle core
+          // Curva em direcao ao nucleo do triangulo.
           const t    = Math.max(0, 1 - dist / infR);
           const pull = 0.018 * (0.42 + t * t) * b.depth;
           b.vx += (dx / dist) * pull * 60 * dt;
@@ -403,14 +362,14 @@ export function initTechField(): void {
           break;
         }
         case 3: {
-          // Dissolving — absorbed into the triangle, shrinks + fades
+          // Some ao ser absorvido pelo triangulo.
           b.phaseT = Math.min(1, b.phaseT + dt * 6.2);
           const fade = 1 - b.phaseT;
           b.opacity = b.targetOpacity * Math.max(0, fade * fade) * 0.35;
           b.x += (dx / dist) * dt * 360;
           b.y += (dy / dist) * dt * 360;
           if (b.phaseT >= 0.3 && pulses.length < 6) {
-            // Emit absorption pulse once (guard phaseT so it fires only once)
+            // Pulso visual emitido apenas uma vez na absorcao.
             if (b.phaseT < 0.35) {
               const maxR = Math.min(w, h) * 0.08;
               pulses.push({ x: ax, y: ay, r: 4, maxR, opacity: 0.5 });
@@ -422,12 +381,12 @@ export function initTechField(): void {
       }
     }
 
-    // Maintain count
+    // Mantem a quantidade adequada para o tamanho atual.
     const count = badgeCount(w);
     while (badges.length < count) badges.push(makeBadge(true));
     if (badges.length > count + 4) badges.length = count + 4;
 
-    // Update absorption pulses
+    // Atualiza os pulsos de absorcao.
     for (let i = pulses.length - 1; i >= 0; i--) {
       const p = pulses[i];
       p.r       += (p.maxR - p.r) * dt * 5;
@@ -435,8 +394,6 @@ export function initTechField(): void {
       if (p.opacity <= 0) pulses.splice(i, 1);
     }
   }
-
-  // ─── Draw: background ──────────────────────────────────────────────────────
 
   function drawBackground(): void {
     ctx.fillStyle = '#5a0712';
@@ -459,10 +416,7 @@ export function initTechField(): void {
     ctx.fillRect(0, 0, w, h);
   }
 
-  // ─── Draw: distorted grid ──────────────────────────────────────────────────
-  // The grid is a regular mesh of lines. Near the mouse cursor each line's
-  // perpendicular position is displaced outward (repulsion). The distortion
-  // falls off smoothly via a squared distance function.
+  // Grade regular que distorce perto do cursor para reforcar profundidade.
 
   function drawGrid(): void {
     if (mousePulse < 0.02) return;
@@ -477,7 +431,7 @@ export function initTechField(): void {
     ctx.lineWidth   = 0.65;
     ctx.lineCap = 'round';
 
-    // Horizontal lines
+    // Linhas horizontais.
     for (let row = 0; row <= GRID_ROWS; row++) {
       const y0 = (row / GRID_ROWS) * h;
       ctx.beginPath();
@@ -486,7 +440,7 @@ export function initTechField(): void {
         const dx = px - mx;
         const dy = y0 - my;
         const d2 = dx * dx + dy * dy;
-        // Smooth bell-curve repulsion: 0 at center, 0 at distR, peak at ~0.5×distR
+        // Repulsao suave com pico perto do meio do raio.
         const t     = Math.max(0, 1 - d2 / distR2);
         const yDisp = (dy / (Math.sqrt(d2) || 1)) * t * (1 - t) * 4 * DIST_AMP * mousePulse;
         const py    = y0 + yDisp;
@@ -495,7 +449,7 @@ export function initTechField(): void {
       ctx.stroke();
     }
 
-    // Vertical lines
+    // Linhas verticais.
     for (let col = 0; col <= GRID_COLS; col++) {
       const x0 = (col / GRID_COLS) * w;
       ctx.beginPath();
@@ -548,8 +502,6 @@ export function initTechField(): void {
     ctx.restore();
   }
 
-  // ─── Draw: connection lines between nearby badges ──────────────────────────
-
   function drawConnections(): void {
     ctx.save();
     for (let i = 0; i < badges.length; i++) {
@@ -572,14 +524,12 @@ export function initTechField(): void {
     ctx.restore();
   }
 
-  // ─── Draw: badge sprites ───────────────────────────────────────────────────
-
   function drawBadges(): void {
     ctx.save();
     for (const b of badges) {
       if (b.opacity < 0.01) continue;
 
-      // Dissolving shrinks the badge visually
+      // A dissolucao reduz o badge visualmente.
       const scale = b.phase === 3 ? Math.max(0.05, 1 - b.phaseT * 0.85) : 1;
       const drawR = b.r * scale;
       const spriteH = SPRITE_SIZE + LABEL_PAD;
@@ -602,17 +552,15 @@ export function initTechField(): void {
       ctx.globalAlpha = Math.min(1, b.opacity);
       ctx.drawImage(
         sprites[b.specIndex] as CanvasImageSource,
-        b.x - drawR,                           // dest x
-        b.y - drawR,                           // dest y
-        drawR * 2,                             // dest w (circle portion)
+        b.x - drawR,
+        b.y - drawR,
+        drawR * 2,
         drawR * 2 * (spriteH / SPRITE_SIZE),
       );
     }
     ctx.globalAlpha = 1;
     ctx.restore();
   }
-
-  // ─── Draw: absorption pulses ───────────────────────────────────────────────
 
   function drawPulses(): void {
     ctx.save();
@@ -623,8 +571,6 @@ export function initTechField(): void {
     }
     ctx.restore();
   }
-
-  // ─── Render loop ───────────────────────────────────────────────────────────
 
   function tick(ts: number): void {
     rafId = requestAnimationFrame(tick);
@@ -645,8 +591,6 @@ export function initTechField(): void {
     drawPulses();
   }
 
-  // ─── Resize ────────────────────────────────────────────────────────────────
-
   function doResize(): void {
     const rect = canvas!.getBoundingClientRect();
     w   = rect.width;
@@ -662,16 +606,12 @@ export function initTechField(): void {
     resizeTimer = window.setTimeout(doResize, 130);
   }
 
-  // ─── Events ────────────────────────────────────────────────────────────────
-
   function onMouseMove(e: MouseEvent): void {
     const rect = section!.getBoundingClientRect();
     mouse.x = (e.clientX - rect.left) / rect.width;
     mouse.y = (e.clientY - rect.top)  / rect.height;
     mousePulse = 1;
   }
-
-  // ─── Init ──────────────────────────────────────────────────────────────────
 
   doResize();
   populate();

@@ -2229,10 +2229,6 @@ svg.process-line {
   position: relative;
   z-index: 1;
 }
-body.portal-active {
-  overflow: hidden;
-  height: 100vh;
-}
 .sec-title .hero-accent {
   color: var(--red);
 }
