@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/',
+  base: '/asani-v5',
   root: '.',
   publicDir: 'public',
   build: {
